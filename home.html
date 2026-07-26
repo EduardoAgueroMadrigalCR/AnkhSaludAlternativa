@@ -36,9 +36,9 @@
         align-items: center;
         justify-content: space-between;
         gap: 18px;
-        padding: 14px 20px;
+        padding: 16px 22px;
         border: 1px solid #e2ebdf;
-        border-radius: 20px;
+        border-radius: 22px;
         background: var(--blanco);
       }
 
@@ -48,31 +48,33 @@
         gap: 8px;
         min-width: 120px;
         flex-shrink: 0;
+        padding: 4px 0;
       }
 
       .brand img {
-        width: 56px;
-        height: 56px;
+        width: 74px;
+        height: 74px;
         display: block;
+        object-fit: contain;
       }
 
       .search-box {
-        flex: 1;
+        flex: 1 1 auto;
         display: flex;
         align-items: center;
         background: var(--gris);
         border: 1px solid #e2ebdf;
         border-radius: 999px;
-        padding: 9px 14px;
+        padding: 11px 16px;
         gap: 8px;
-        max-width: 620px;
-        min-height: 44px;
-        margin: 0 auto;
+        min-height: 48px;
+        width: 100%;
+        min-width: 0;
       }
 
       .search-box svg {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         stroke: var(--verde-principal);
         fill: none;
         stroke-width: 1.8;
@@ -84,19 +86,19 @@
         outline: none;
         background: transparent;
         width: 100%;
-        font-size: 0.95rem;
+        font-size: 1rem;
         color: var(--negro);
       }
 
       .actions {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
       }
 
       .icon-btn {
-        width: 40px;
-        height: 40px;
+        width: 46px;
+        height: 46px;
         border: 1px solid #e2ebdf;
         border-radius: 50%;
         background: var(--blanco);
@@ -106,8 +108,8 @@
       }
 
       .icon-btn svg {
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         stroke: var(--verde-principal);
         fill: none;
         stroke-width: 1.8;
@@ -116,46 +118,93 @@
       .hero {
         margin-top: 24px;
         display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.75fr);
         gap: 20px;
         align-items: center;
-        padding: 24px;
+        padding: 22px 24px;
         border: 1px solid #e2ebdf;
-        border-radius: 24px;
+        border-radius: 22px;
         background: #f9fdf9;
       }
 
+      .hero-copy {
+        max-width: 560px;
+      }
+
       .hero h1 {
-        font-size: 2rem;
-        margin: 0 0 10px;
+        font-size: 1.65rem;
+        margin: 0 0 8px;
       }
 
       .hero p {
         color: var(--gris-texto);
         line-height: 1.6;
-        margin: 0 0 18px;
+        margin: 0 0 14px;
+        font-size: 0.95rem;
       }
 
       .hero .pill {
         display: inline-block;
         background: var(--verde-principal);
         color: var(--blanco);
-        padding: 7px 10px;
+        padding: 6px 10px;
         border-radius: 999px;
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         font-weight: 600;
+      }
+
+      .hero-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .hero-nav {
+        width: 34px;
+        height: 34px;
+        border: 1px solid #dfe8df;
+        border-radius: 50%;
+        background: var(--blanco);
+        color: var(--verde-principal);
+        cursor: pointer;
+        font-size: 0.95rem;
+      }
+
+      .hero-dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .hero-dot {
+        width: 8px;
+        height: 8px;
+        border: none;
+        border-radius: 50%;
+        background: #cfd8cf;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      .hero-dot.active {
+        background: var(--verde-principal);
+        transform: scale(1.1);
       }
 
       .hero-card {
         background: var(--blanco);
         border: 1px solid #e2ebdf;
-        border-radius: 20px;
-        padding: 18px;
+        border-radius: 18px;
+        padding: 12px;
+        max-width: 340px;
+        margin-left: auto;
       }
 
       .hero-card img {
         width: 100%;
-        border-radius: 16px;
+        height: 215px;
+        object-fit: cover;
+        border-radius: 14px;
         display: block;
       }
 
@@ -340,16 +389,25 @@
       </header>
 
       <section class="hero">
-        <div>
-          <span class="pill">Productos destacados</span>
-          <h1>Descubre lo mejor de ANKH</h1>
-          <p>
+        <div class="hero-copy">
+          <span class="pill" id="hero-pill">Productos destacados</span>
+          <h1 id="hero-title">Descubre lo mejor de ANKH</h1>
+          <p id="hero-description">
             Explora una selección de productos con un diseño limpio, moderno y
             fácil de encontrar.
           </p>
+          <div class="hero-controls">
+            <button class="hero-nav" data-direction="prev" aria-label="Anuncio anterior">
+              ←
+            </button>
+            <div class="hero-dots" id="hero-dots"></div>
+            <button class="hero-nav" data-direction="next" aria-label="Siguiente anuncio">
+              →
+            </button>
+          </div>
         </div>
         <div class="hero-card">
-          <img src="images/P1.jpg" alt="Producto destacado" />
+          <img id="hero-image" src="images/P1.jpg" alt="Producto destacado" />
         </div>
       </section>
 
@@ -430,5 +488,76 @@
         </div>
       </section>
     </div>
+
+    <script>
+      const heroAnnouncements = [
+        {
+          pill: 'Productos destacados',
+          title: 'Descubre lo mejor de ANKH',
+          description:
+            'Explora una selección de productos con un diseño limpio, moderno y fácil de encontrar.',
+          image: 'images/P1.jpg',
+          alt: 'Producto destacado'
+        },
+        {
+          pill: 'Nuevas tendencias',
+          title: 'Encuentra piezas que marcan la diferencia',
+          description:
+            'Descubre productos modernos, funcionales y pensados para cada momento del día.',
+          image: 'images/p2.jpg',
+          alt: 'Nueva colección'
+        },
+        {
+          pill: 'Ofertas especiales',
+          title: 'Aprovecha precios increíbles esta semana',
+          description:
+            'Selecciona artículos destacados con promociones exclusivas para renovar tu espacio.',
+          image: 'images/P3.png',
+          alt: 'Oferta especial'
+        }
+      ];
+
+      let heroIndex = 0;
+      const heroPill = document.getElementById('hero-pill');
+      const heroTitle = document.getElementById('hero-title');
+      const heroDescription = document.getElementById('hero-description');
+      const heroImage = document.getElementById('hero-image');
+      const heroDots = document.getElementById('hero-dots');
+
+      function renderHeroAnnouncement(index) {
+        const announcement = heroAnnouncements[index];
+        heroPill.textContent = announcement.pill;
+        heroTitle.textContent = announcement.title;
+        heroDescription.textContent = announcement.description;
+        heroImage.src = announcement.image;
+        heroImage.alt = announcement.alt;
+
+        heroDots.innerHTML = heroAnnouncements
+          .map(
+            (_, dotIndex) =>
+              `<button class="hero-dot ${dotIndex === index ? 'active' : ''}" data-index="${dotIndex}" aria-label="Ver anuncio ${dotIndex + 1}"></button>`
+          )
+          .join('');
+      }
+
+      document.querySelectorAll('.hero-nav').forEach((button) => {
+        button.addEventListener('click', () => {
+          const direction = button.getAttribute('data-direction');
+          heroIndex = direction === 'next'
+            ? (heroIndex + 1) % heroAnnouncements.length
+            : (heroIndex - 1 + heroAnnouncements.length) % heroAnnouncements.length;
+          renderHeroAnnouncement(heroIndex);
+        });
+      });
+
+      heroDots.addEventListener('click', (event) => {
+        const dot = event.target.closest('.hero-dot');
+        if (!dot) return;
+        heroIndex = Number(dot.getAttribute('data-index'));
+        renderHeroAnnouncement(heroIndex);
+      });
+
+      renderHeroAnnouncement(heroIndex);
+    </script>
   </body>
 </html>
