@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANKH | Perfil</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div>
+            <strong>ANKH</strong>
+            <span>Perfil</span>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="index.html">Inicio</a>
+          <a href="index.html">Productos</a>
+          <a href="perfil.html">Perfil</a>
+        </nav>
+      </header>
+
+      <!-- RF-07: actualizar nombre y correo -->
+      <section class="section-card card">
+        <h2>Mi perfil</h2>
+        <p class="status" id="profileInfo">Cargando tu perfil...</p>
+        <div class="form-grid" style="margin-top:14px">
+          <div class="row-2">
+            <input type="text" id="profileName" placeholder="Nombre completo" maxlength="100" />
+            <input type="email" id="profileEmail" placeholder="Correo electrónico" maxlength="150" />
+          </div>
+          <p class="status" id="profileRole"></p>
+          <div class="profile-actions">
+            <button class="button-primary" id="saveProfile">Guardar cambios</button>
+            <button class="button-secondary" id="cancelProfile">Cancelar</button>
+            <button class="button-secondary" id="logoutButton">Cerrar sesión</button>
+          </div>
+          <p id="profileMessage" class="status hidden"></p>
+        </div>
+      </section>
+
+      <!-- RF-03: cambiar contraseña -->
+      <section class="section-card card" id="passwordSection">
+        <h2>Cambiar contraseña</h2>
+        <p id="passwordNotice" class="status hidden" style="margin-bottom:14px"></p>
+        <div class="form-grid">
+          <input type="password" id="currentPassword" placeholder="Contraseña actual" autocomplete="current-password" />
+          <div class="row-2">
+            <input type="password" id="newPassword" placeholder="Nueva contraseña" autocomplete="new-password" />
+            <input type="password" id="confirmPassword" placeholder="Confirmar nueva contraseña" autocomplete="new-password" />
+          </div>
+          <p class="status">Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo.</p>
+          <div class="profile-actions">
+            <button class="button-primary" id="savePassword">Cambiar contraseña</button>
+          </div>
+          <p id="passwordMessage" class="status hidden"></p>
+        </div>
+      </section>
+
+      <section class="section-card card order-history-section hidden" id="orderHistorySection">
+        <h3>Pedidos recientes</h3>
+        <div id="orderHistory" class="order-list"></div>
+      </section>
+    </div>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script>
+      const sesionActual = AnkhApi.requiereSesion();
+
+      const profileName = document.getElementById('profileName');
+      const profileEmail = document.getElementById('profileEmail');
+      const profileInfo = document.getElementById('profileInfo');
+      const profileRole = document.getElementById('profileRole');
+      const profileMessage = document.getElementById('profileMessage');
+      const passwordMessage = document.getElementById('passwordMessage');
+      const passwordNotice = document.getElementById('passwordNotice');
+      const orderHistorySection = document.getElementById('orderHistorySection');
+      const orderHistory = document.getElementById('orderHistory');
+      let perfilOriginal = null;
+
+      function loadOrders() {
+        const saved = localStorage.getItem('ankh-orders');
+        return saved ? JSON.parse(saved) : [];
+      }
+
+      function renderOrderHistory(orders) {
+        orderHistory.innerHTML = orders.map(order => `
+          <article class="order-card">
+            <div class="order-row">
+              <span>Pedido ${AnkhApi.esc(order.id)}</span>
+              <strong>${new Date(order.date).toLocaleDateString('es-CO')}</strong>
+            </div>
+            <div class="order-row">
+              <span>Total</span>
+              <strong>${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(order.total)}</strong>
+            </div>
+            <div class="order-actions" style="display:flex; gap: 10px;">
+              <a class="button-secondary" href="pedido.html?orderId=${encodeURIComponent(order.id)}">Ver pedido</a>
+            </div>
+          </article>
+        `).join('');
+      }
+
+      function pintarPerfil(perfil, modulos) {
+        perfilOriginal = perfil;
+        profileName.value = perfil.nombre;
+        profileEmail.value = perfil.correoElectronico;
+        profileInfo.textContent = `Sesión activa como ${perfil.nombre}`;
+        if (modulos) {
+          profileRole.textContent = `Rol: ${perfil.rol}  ·  Módulos con acceso: ${modulos.join(', ') || 'ninguno'}`;
+        }
+        const orders = loadOrders().filter(o => o.userEmail === perfil.correoElectronico);
+        if (orders.length) { orderHistorySection.classList.remove('hidden'); renderOrderHistory(orders); }
+      }
+
+      async function cargarPerfil() {
+        try {
+          const [perfil, modulos] = await Promise.all([AnkhApi.get('/Cuenta/Perfil'), AnkhApi.get('/Acceso/Modulos')]);
+          pintarPerfil(perfil, modulos);
+        } catch (error) {
+          AnkhApi.mostrar(profileMessage, error.message, true);
+        }
+      }
+
+      // RF-07 escenario 1 y 2 (el formato del correo lo valida la API con anotaciones)
+      document.getElementById('saveProfile').addEventListener('click', async () => {
+        try {
+          const r = await AnkhApi.put('/Cuenta/Perfil', {
+            nombre: profileName.value.trim(),
+            correoElectronico: profileEmail.value.trim()
+          });
+          AnkhApi.actualizarSesion({ nombre: profileName.value.trim(), correo: profileEmail.value.trim() });
+          AnkhApi.mostrar(profileMessage, r.mensaje);
+          cargarPerfil();
+        } catch (error) {
+          AnkhApi.mostrar(profileMessage, error.message, true);
+        }
+      });
+
+      // RF-07 escenario 3: cancelar descarta los cambios
+      document.getElementById('cancelProfile').addEventListener('click', () => {
+        if (!perfilOriginal) return;
+        profileName.value = perfilOriginal.nombre;
+        profileEmail.value = perfilOriginal.correoElectronico;
+        AnkhApi.mostrar(profileMessage, 'Cambios descartados.');
+      });
+
+      document.getElementById('logoutButton').addEventListener('click', () => AnkhApi.logout());
+
+      // RF-03
+      document.getElementById('savePassword').addEventListener('click', async () => {
+        try {
+          const r = await AnkhApi.put('/Cuenta/Password', {
+            passwordActual: document.getElementById('currentPassword').value,
+            nuevaPassword: document.getElementById('newPassword').value,
+            confirmarPassword: document.getElementById('confirmPassword').value
+          });
+          ['currentPassword', 'newPassword', 'confirmPassword'].forEach(id => document.getElementById(id).value = '');
+          AnkhApi.actualizarSesion({ debeCambiarPassword: false });
+          passwordNotice.classList.add('hidden');
+          AnkhApi.mostrar(passwordMessage, r.mensaje);
+        } catch (error) {
+          AnkhApi.mostrar(passwordMessage, error.message, true);
+        }
+      });
+
+      if (sesionActual) {
+        if (new URLSearchParams(window.location.search).has('cambiar') || sesionActual.debeCambiarPassword) {
+          AnkhApi.mostrar(passwordNotice, 'Está usando una contraseña temporal. Por seguridad, cámbiela ahora.', true);
+        }
+        cargarPerfil();
+      }
+    </script>
+  </body>
+</html>

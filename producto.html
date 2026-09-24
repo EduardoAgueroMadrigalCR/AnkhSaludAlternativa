@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANKH | Producto</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="site-brand">
+        <img src="images/ANKH-logo.png" alt="ANKH logo" />
+        <div>
+          <strong>ANKH</strong>
+          <span>Detalle del producto</span>
+        </div>
+      </div>
+      <nav class="site-nav">
+        <a href="index.html">Inicio</a>
+        <a href="index.html">Productos</a>
+        <a href="perfil.html">Perfil</a>
+      </nav>
+    </header>
+
+    <section class="section-card card product-detail-card">
+      <div id="productDetail"></div>
+    </section>
+  </div>
+
+  <script>
+    const products = [
+      {
+        id: 1,
+        name: 'Ashwagandha Premium',
+        category: 'Bienestar',
+        description: 'Suplemento herbal para equilibrio y energía diaria.',
+        image: 'images/ASHWAGANDHA.jpg',
+        price: 82000,
+        details: '60 cápsulas de extracto estandarizado para una sensación de calma y resistencia natural.'
+      },
+      {
+        id: 2,
+        name: 'Vitamina D3 + B12',
+        category: 'Salud',
+        description: 'Fórmula para energía, inmunidad y soporte óseo.',
+        image: 'images/D3+B12.jpg',
+        price: 49500,
+        details: '30 tabletas para mantener tu sistema inmune y niveles de energía saludables.'
+      },
+      {
+        id: 3,
+        name: 'Colágeno Marino',
+        category: 'Belleza',
+        description: 'Refuerza piel, cabello y articulaciones con colágeno puro.',
+        image: 'images/COLAGENOMARINO.png',
+        price: 142000,
+        details: 'Fórmula con colágeno tipo I y III para mayor firmeza y elasticidad.'
+      },
+      {
+        id: 4,
+        name: 'DHEA 10mg',
+        category: 'Vitalidad',
+        description: 'Apoya bienestar hormonal y energía natural.',
+        image: 'images/DHEA10MG.jpg',
+        price: 78000,
+        details: '30 cápsulas de DHEA para un apoyo metabólico balanceado.'
+      },
+      {
+        id: 5,
+        name: 'Pasta dental fresca',
+        category: 'Cuidado',
+        description: 'Protección diaria con sensación fresca y limpieza avanzada.',
+        image: 'images/TOOTHPASTE.jpg',
+        price: 18900,
+        details: 'Fórmula suave que blanquea y protege el esmalte con frescura duradera.'
+      }
+    ];
+
+    const productDetail = document.getElementById('productDetail');
+    const query = new URLSearchParams(window.location.search);
+    const productId = Number(query.get('id'));
+    const product = products.find(item => item.id === productId);
+
+    function formatMoney(value) {
+      return '$' + value.toLocaleString('es-CO');
+    }
+
+    if (!product) {
+      productDetail.innerHTML = `
+          <div class="cart-empty">Producto no encontrado.</div>
+          <a class="button-primary" href="index.html">Volver a productos</a>
+        `;
+    } else {
+      const highlights = [
+        'Material premium y duradero',
+        'Diseño ergonómico y moderno',
+        'Ideal para uso diario en el hogar',
+        'Envío rápido y seguro'
+      ];
+
+      productDetail.innerHTML = `
+          <div class="product-detail-inner">
+            <div class="product-detail-media">
+              <img src="${product.image}" alt="${product.name}" />
+            </div>
+            <div class="product-detail-info">
+              <span class="badge badge-soft">${product.category}</span>
+              <h2>${product.name}</h2>
+              <p class="product-lead">${product.description}</p>
+              <div class="product-detail-meta">
+                <strong>${formatMoney(product.price)}</strong>
+                <div class="product-detail-actions">
+                  <button class="button-primary" id="addToCartBtn" type="button">Agregar al carrito</button>
+                  <a class="button-secondary" href="index.html">Seguir viendo</a>
+                </div>
+              </div>
+              <div class="product-detail-section">
+                <h3>Lo que obtienes</h3>
+                <p>${product.details}</p>
+                <ul class="product-features">
+                  ${highlights.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+              </div>
+              <div class="product-detail-section">
+                <h3>Beneficios clave</h3>
+                <div class="product-stats-grid">
+                  <div>
+                    <strong>4.8</strong>
+                    <span>Calificación</span>
+                  </div>
+                  <div>
+                    <strong>24h</strong>
+                    <span>Despacho rápido</span>
+                  </div>
+                  <div>
+                    <strong>100%</strong>
+                    <span>Satisfacción</span>
+                  </div>
+                </div>
+              </div>
+              <p id="productMessage" class="status hidden"></p>
+            </div>
+          </div>
+        `;
+
+      const addToCartBtn = document.getElementById('addToCartBtn');
+      const productMessage = document.getElementById('productMessage');
+
+      if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', () => {
+          const saved = localStorage.getItem('ankh-cart');
+          const cart = saved ? JSON.parse(saved) : [];
+          const item = cart.find(entry => entry.id === product.id);
+          if (item) {
+            item.quantity += 1;
+          } else {
+            cart.push({ id: product.id, quantity: 1 });
+          }
+          localStorage.setItem('ankh-cart', JSON.stringify(cart));
+          if (productMessage) {
+            productMessage.textContent = 'Producto agregado al carrito.';
+            productMessage.classList.remove('hidden');
+          }
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>

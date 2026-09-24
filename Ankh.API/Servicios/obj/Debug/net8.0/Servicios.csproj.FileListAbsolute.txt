@@ -1,0 +1,16 @@
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\bin\Debug\net8.0\Servicios.deps.json
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\bin\Debug\net8.0\Servicios.dll
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\bin\Debug\net8.0\Servicios.pdb
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\bin\Debug\net8.0\Abstracciones.dll
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\bin\Debug\net8.0\Abstracciones.pdb
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\Servicios.csproj.AssemblyReference.cache
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\Servicios.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\Servicios.AssemblyInfoInputs.cache
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\Servicios.AssemblyInfo.cs
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\Servicios.csproj.CoreCompileInputs.cache
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\Servicios.sourcelink.json
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\Servicios.csproj.Up2Date
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\Servicios.dll
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\refint\Servicios.dll
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\Servicios.pdb
+C:\Users\Eduardo\Downloads\ANKH\Ankh.API\Servicios\obj\Debug\net8.0\ref\Servicios.dll

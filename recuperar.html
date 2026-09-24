@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANKH | Recuperar contraseña</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div><strong>ANKH</strong><span>Recuperar contraseña</span></div>
+        </div>
+        <nav class="site-nav"><a href="login.html">Volver al acceso</a></nav>
+      </header>
+
+      <section class="section-card card">
+        <h2>¿Olvidó su contraseña?</h2>
+        <p style="margin-bottom:18px">Escriba el correo de su cuenta y le enviaremos un enlace para crear una nueva. El enlace es válido por 30 minutos.</p>
+        <div class="form-grid">
+          <input type="email" id="correo" placeholder="Correo electrónico" />
+          <button type="button" class="button-primary" id="enviar">Enviar enlace de recuperación</button>
+          <p id="estado" class="status hidden"></p>
+        </div>
+      </section>
+    </div>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script>
+      const correo = document.getElementById('correo');
+      const enviar = document.getElementById('enviar');
+      const estado = document.getElementById('estado');
+
+      enviar.addEventListener('click', async () => {
+        if (!correo.value.trim()) { AnkhApi.mostrar(estado, 'Ingrese su correo.', true); return; }
+        enviar.disabled = true;
+        try {
+          const r = await AnkhApi.post('/Recuperacion/Solicitar', { correoElectronico: correo.value.trim() }, false);
+          AnkhApi.mostrar(estado, r.mensaje);
+        } catch (error) {
+          AnkhApi.mostrar(estado, error.message, true);
+        }
+        enviar.disabled = false;
+      });
+    </script>
+  </body>
+</html>

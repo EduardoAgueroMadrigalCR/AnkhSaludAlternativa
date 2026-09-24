@@ -1,0 +1,20 @@
+CREATE TABLE [dbo].[Usuarios] (
+    [Id]                 UNIQUEIDENTIFIER NOT NULL,
+    [Nombre]             VARCHAR(100)     NOT NULL,
+    [CorreoElectronico]  VARCHAR(150)     NOT NULL,
+    [PasswordHash]       VARCHAR(255)     NOT NULL,
+    [IdRol]              INT              NOT NULL,
+    [Activo]             BIT              NOT NULL CONSTRAINT [DF_Usuarios_Activo] DEFAULT (1),
+    [DebeCambiarPassword] BIT             NOT NULL CONSTRAINT [DF_Usuarios_DebeCambiar] DEFAULT (0),
+    [IntentosFallidos]   INT              NOT NULL CONSTRAINT [DF_Usuarios_Intentos] DEFAULT (0),
+    [BloqueadoHasta]     DATETIME         NULL,
+    [UltimoLogin]        DATETIME         NULL,
+    [FechaDesactivacion] DATETIME         NULL,
+    [FechaCreacion]      DATETIME         NULL CONSTRAINT [DF_Usuarios_FechaCreacion] DEFAULT (GETDATE()),
+    [FechaModificacion]  DATETIME         NULL,
+    [UsuarioCrea]        UNIQUEIDENTIFIER NULL,
+    [UsuarioModifica]    UNIQUEIDENTIFIER NULL,
+    CONSTRAINT [PK_Usuarios] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Usuarios_Roles] FOREIGN KEY ([IdRol]) REFERENCES [dbo].[Roles] ([Id]),
+    CONSTRAINT [UQ_Usuarios_Correo] UNIQUE ([CorreoElectronico])
+);

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANKH | Iniciar sesión</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div>
+            <strong>ANKH</strong>
+            <span>Acceso</span>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="index.html">Inicio</a>
+          <a href="index.html">Productos</a>
+        </nav>
+      </header>
+
+      <section class="section-card card">
+        <h2>Iniciar sesión</h2>
+        <p style="margin-bottom:18px">Ingrese con sus credenciales. Si no tiene cuenta, solicítela a la administradora.</p>
+
+        <div class="form-grid">
+          <input type="email" id="loginEmail" placeholder="Correo electrónico" autocomplete="username" />
+          <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="current-password" />
+          <button type="button" class="button-primary" id="loginButton">Ingresar</button>
+          <p id="loginStatus" class="status hidden"></p>
+          <a href="recuperar.html">¿Olvidó su contraseña?</a>
+        </div>
+      </section>
+    </div>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script>
+      const loginEmail = document.getElementById('loginEmail');
+      const loginPassword = document.getElementById('loginPassword');
+      const loginButton = document.getElementById('loginButton');
+      const loginStatus = document.getElementById('loginStatus');
+
+      // Mensaje dejado por una sesion expirada (RF-02)
+      const aviso = sessionStorage.getItem('ankh-aviso');
+      if (aviso) {
+        AnkhApi.mostrar(loginStatus, aviso, true);
+        sessionStorage.removeItem('ankh-aviso');
+      }
+
+      async function iniciarSesion() {
+        if (!loginEmail.value.trim() || !loginPassword.value) {
+          AnkhApi.mostrar(loginStatus, 'Ingrese su correo y su contraseña.', true);
+          return;
+        }
+        loginButton.disabled = true;
+        try {
+          const r = await AnkhApi.login(loginEmail.value.trim(), loginPassword.value);
+          AnkhApi.mostrar(loginStatus, `Bienvenido, ${r.nombre}. Redirigiendo...`);
+          // Contrasena temporal (RF-05): se obliga a cambiarla antes de continuar
+          const destino = r.debeCambiarPassword ? 'perfil.html?cambiar=1' : 'index.html';
+          setTimeout(() => window.location.href = destino, 600);
+        } catch (error) {
+          AnkhApi.mostrar(loginStatus, error.message, true);
+          loginPassword.value = '';
+          loginButton.disabled = false;
+        }
+      }
+
+      loginButton.addEventListener('click', iniciarSesion);
+      loginPassword.addEventListener('keydown', e => { if (e.key === 'Enter') iniciarSesion(); });
+    </script>
+  </body>
+</html>

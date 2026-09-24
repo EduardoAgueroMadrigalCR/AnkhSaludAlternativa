@@ -3,321 +3,129 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ANKH | Crear cuenta</title>
-    <style>
-      :root {
-        --verde-principal: #2e7d32;
-        --verde-secundario: #4caf50;
-        --negro: #000000;
-        --blanco: #ffffff;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: #ffffff;
-        color: var(--negro);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-      }
-
-      .auth-card {
-        width: 100%;
-        max-width: 1050px;
-        background: var(--blanco);
-        border: 2px solid var(--verde-principal);
-        border-radius: 28px;
-        box-shadow: 0 10px 24px rgba(46, 125, 50, 0.1);
-        overflow: hidden;
-        display: grid;
-        grid-template-columns: 1.05fr 0.95fr;
-      }
-
-      .brand-panel {
-        background: #ffffff;
-        padding: 42px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        border-right: 1px solid rgba(46, 125, 50, 0.18);
-      }
-
-      .brand-panel img {
-        width: 140px;
-        margin-bottom: 18px;
-        display: block;
-        background: transparent;
-        padding: 0;
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-      }
-
-      .brand-panel h1 {
-        font-size: 2rem;
-        margin: 0 0 10px;
-        color: var(--negro);
-        letter-spacing: 1px;
-      }
-
-      .brand-panel p {
-        font-size: 1rem;
-        margin: 0;
-        line-height: 1.6;
-        color: #3c3c3c;
-      }
-
-      .brand-panel .highlight {
-        color: var(--verde-principal);
-        font-weight: 700;
-      }
-
-      .brand-panel .accent-line {
-        width: 120px;
-        height: 4px;
-        background: var(--verde-principal);
-        border-radius: 999px;
-        margin-top: 22px;
-      }
-
-      .form-panel {
-        padding: 40px 36px;
-      }
-
-      .toggle-buttons {
-        display: inline-flex;
-        background: #f2f7f2;
-        border: 1px solid #dce9dc;
-        border-radius: 999px;
-        padding: 6px;
-        margin-bottom: 24px;
-        gap: 6px;
-      }
-
-      .toggle-btn {
-        border: none;
-        background: transparent;
-        padding: 10px 18px;
-        border-radius: 999px;
-        font-weight: 600;
-        color: #4f4f4f;
-        cursor: pointer;
-        transition: all 0.25s ease;
-      }
-
-      .toggle-btn.active {
-        background: var(--verde-principal);
-        color: var(--blanco);
-        box-shadow: none;
-      }
-
-      .form-section {
-        display: none;
-        animation: fadeIn 0.25s ease;
-      }
-
-      .form-section.active {
-        display: block;
-      }
-
-      .form-section h2 {
-        margin: 0 0 8px;
-        font-size: 1.4rem;
-      }
-
-      .form-section .subtitle {
-        margin: 0 0 20px;
-        color: #676767;
-      }
-
-      .field-group {
-        margin-bottom: 14px;
-      }
-
-      label {
-        display: block;
-        margin-bottom: 7px;
-        font-weight: 600;
-        color: #2f2f2f;
-      }
-
-      input {
-        width: 100%;
-        padding: 13px 14px;
-        border-radius: 12px;
-        border: 1px solid #cfe3cf;
-        outline: none;
-        font-size: 0.95rem;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      input:focus {
-        border-color: var(--verde-principal);
-        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
-      }
-
-      .submit-btn {
-        width: 100%;
-        margin-top: 10px;
-        padding: 14px;
-        border: none;
-        border-radius: 12px;
-        background: var(--verde-principal);
-        color: var(--blanco);
-        font-size: 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: none;
-      }
-
-      .submit-btn:hover {
-        transform: translateY(-1px);
-      }
-
-      .helper-text {
-        margin-top: 14px;
-        font-size: 0.95rem;
-        color: #4f4f4f;
-      }
-
-      .helper-text a {
-        color: var(--verde-principal);
-        text-decoration: none;
-        font-weight: 600;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(6px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @media (max-width: 900px) {
-        .auth-card {
-          grid-template-columns: 1fr;
-        }
-
-        .brand-panel {
-          border-right: none;
-          border-bottom: 1px solid rgba(46, 125, 50, 0.18);
-        }
-      }
-    </style>
+    <title>ANKH | Inicio</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="auth-card">
-      <section class="brand-panel">
-        <img src="images/ANKH-logo.png" alt="Logo de ANKH" />
-        <h1>Bienvenido a ANKH</h1>
-        <p>
-          Crea tu cuenta o inicia sesión para entrar a una experiencia más
-          <span class="highlight">segura, elegante y organizada</span>.
-        </p>
-        <div class="accent-line"></div>
-      </section>
-
-      <section class="form-panel">
-        <div class="toggle-buttons" role="tablist" aria-label="Opciones de acceso">
-          <button class="toggle-btn active" data-target="signup">Crear cuenta</button>
-          <button class="toggle-btn" data-target="login">Iniciar sesión</button>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div>
+            <strong>ANKH</strong>
+            <span>Demo interactivo</span>
+          </div>
         </div>
+        <nav class="site-nav">
+          <a href="index.html">Inicio</a>
+          <a href="index.html">Productos</a>
+          <a id="navProfile" href="perfil.html">Perfil</a>
+        </nav>
+      </header>
 
-        <div id="signup" class="form-section active">
-          <h2>Crear cuenta</h2>
-          <p class="subtitle">Completa tus datos para empezar.</p>
-
-          <form class="auth-form" data-action="home">
-            <div class="field-group">
-              <label for="name">Nombre completo</label>
-              <input id="name" type="text" placeholder="Tu nombre" />
+      <section class="hero-card hero">
+        <div class="promo-panel hero-promo-panel">
+          <div class="promo-panel-image">
+            <img id="promoImage" src="images/ASHWAGANDHA.jpg" alt="Promoción ANKH" />
+            <div class="promo-nav-buttons">
+              <button type="button" class="carousel-arrow promo-nav" id="promoPrev">‹</button>
+              <button type="button" class="carousel-arrow promo-nav" id="promoNext">›</button>
             </div>
-
-            <div class="field-group">
-              <label for="phone">Número de teléfono</label>
-              <input id="phone" type="tel" placeholder="Ej. 3001234567" />
+          </div>
+          <div class="promo-panel-copy">
+            <span class="badge badge-soft" id="promoLabel">Oferta limitada</span>
+            <h1 id="promoTitle">Set de confort premium</h1>
+            <p id="promoDescription">Ahorra 20% en el nuevo set para casa con diseño ergonómico y materiales suaves.</p>
+            <div class="promo-panel-footer">
+              <strong id="promoPrice">Desde $129.000</strong>
+              <a class="button-primary button-link" id="promoButton" href="index.html?categoria=Hogar">Ver promoción</a>
             </div>
-
-            <div class="field-group">
-              <label for="id">Cédula</label>
-              <input id="id" type="text" placeholder="Ej. 1001234567" />
-            </div>
-
-            <div class="field-group">
-              <label for="email">Correo electrónico</label>
-              <input id="email" type="email" placeholder="tu@email.com" />
-            </div>
-
-            <div class="field-group">
-              <label for="password">Contraseña</label>
-              <input id="password" type="password" placeholder="Crea una contraseña" />
-            </div>
-
-            <button class="submit-btn" type="submit">Registrarme</button>
-          </form>
-        </div>
-
-        <div id="login" class="form-section">
-          <h2>Iniciar sesión</h2>
-          <p class="subtitle">Ingresa tus credenciales para continuar.</p>
-
-          <form class="auth-form" data-action="home">
-            <div class="field-group">
-              <label for="login-email">Correo electrónico</label>
-              <input id="login-email" type="email" placeholder="tu@email.com" />
-            </div>
-
-            <div class="field-group">
-              <label for="login-password">Contraseña</label>
-              <input id="login-password" type="password" placeholder="Tu contraseña" />
-            </div>
-
-            <button class="submit-btn" type="submit">Entrar</button>
-          </form>
-
-          <p class="helper-text">
-            ¿Olvidaste tu contraseña? <a href="#">Recupérala aquí</a>
-          </p>
+          </div>
         </div>
       </section>
-    </main>
 
-    <script>
-      const buttons = document.querySelectorAll('.toggle-btn');
-      const sections = document.querySelectorAll('.form-section');
-      const forms = document.querySelectorAll('.auth-form');
+      <section class="section-card card explore-section">
+        <div class="explore-grid">
+          <aside class="explore-sidebar">
+            <div class="sidebar-group">
+              <h2>Ordena y filtra</h2>
+              <p class="sidebar-note">Encuentra productos más rápido con filtros básicos.</p>
+            </div>
+            <div class="sidebar-group">
+              <label for="sortSelect">Ordenar por</label>
+              <select id="sortSelect" class="sort-select">
+                <option value="popular">Lo más popular</option>
+                <option value="priceLow">Precio: más bajo</option>
+                <option value="priceHigh">Precio: más alto</option>
+                <option value="newest">Más nuevo</option>
+              </select>
+            </div>
+            <div class="sidebar-group">
+              <p class="sidebar-title">Filtros</p>
+              <label class="filter-line"><input type="checkbox" id="filterStock" checked /> Solo en stock</label>
+              <label class="filter-line"><input type="checkbox" id="filterDiscount" /> Con descuento</label>
+              <label class="filter-line"><input type="checkbox" id="filterNew" /> Nuevos</label>
+            </div>
+            <div class="sidebar-group">
+              <p class="sidebar-title">Categorías</p>
+              <div class="category-buttons category-sidebar-buttons">
+                <button type="button" class="category-pill active" data-category="Todas">Todas</button>
+                <button type="button" class="category-pill" data-category="Hogar">Hogar</button>
+                <button type="button" class="category-pill" data-category="Bienestar">Bienestar</button>
+                <button type="button" class="category-pill" data-category="Estilo">Estilo</button>
+                <button type="button" class="category-pill" data-category="Diseño">Diseño</button>
+              </div>
+            </div>
+          </aside>
+          <div class="explore-content">
+            <div class="section-header">
+              <div>
+                <h2>Productos en el home</h2>
+                <p class="section-note">Mostrando propuestas destacadas para tu experiencia.</p>
+              </div>
+              <span id="productCount" class="product-count">4 productos</span>
+            </div>
+            <div class="product-preview-grid" id="homeProductGrid"></div>
+          </div>
+        </div>
+      </section>
 
-      buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-          buttons.forEach((btn) => btn.classList.remove('active'));
-          button.classList.add('active');
+    </div>
 
-          sections.forEach((section) => {
-            section.classList.remove('active');
-            if (section.id === button.dataset.target) {
-              section.classList.add('active');
-            }
-          });
-        });
-      });
+    <button class="cart-toggle" id="cartToggle" aria-label="Abrir carrito">
+      <svg viewBox="0 0 24 24" class="cart-icon" aria-hidden="true">
+        <path d="M7 4H5L4 6H7L7 4ZM6 9H19L21 20H6L6 9ZM9 22A1 1 0 1 0 9 20A1 1 0 0 0 9 22ZM17 22A1 1 0 1 0 17 20A1 1 0 0 0 17 22Z" />
+      </svg>
+      <span class="cart-badge" id="cartCount">0</span>
+    </button>
 
-      forms.forEach((form) => {
-        form.addEventListener('submit', (event) => {
-          event.preventDefault();
-          window.location.href = 'home.html';
-        });
-      });
-    </script>
+    <aside class="cart-drawer" id="cartDrawer">
+      <div class="cart-header">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+          <div>
+            <h2>Tu carrito</h2>
+            <p style="margin: 6px 0 0; color: var(--gris-medio);">Revisa tus artículos y finaliza tu compra.</p>
+          </div>
+          <button class="button-tertiary" id="closeCart" style="font-size:1.5rem;">×</button>
+        </div>
+      </div>
+      <div class="cart-list" id="cartList"></div>
+      <div class="cart-footer">
+        <div class="total-row">
+          <span>Total</span>
+          <strong id="cartTotal">$0</strong>
+        </div>
+        <form class="checkout-form" id="checkoutForm">
+          <input type="text" id="checkoutAddress" placeholder="Dirección de entrega" required />
+          <button class="button-primary" type="submit">Pagar</button>
+        </form>
+        <div class="checkout-receipt hidden" id="checkoutReceipt"></div>
+        <p class="checkout-message hidden" id="checkoutMessage"></p>
+      </div>
+    </aside>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script src="scripts/home-data.js"></script>
+    <script src="scripts/index.js"></script>
   </body>
 </html>

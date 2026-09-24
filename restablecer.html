@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANKH | Nueva contraseña</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div><strong>ANKH</strong><span>Nueva contraseña</span></div>
+        </div>
+        <nav class="site-nav"><a href="login.html">Ir al acceso</a></nav>
+      </header>
+
+      <section class="section-card card">
+        <h2>Crear nueva contraseña</h2>
+        <p style="margin-bottom:18px">Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo.</p>
+        <div class="form-grid">
+          <input type="password" id="nueva" placeholder="Nueva contraseña" autocomplete="new-password" />
+          <input type="password" id="confirmar" placeholder="Confirmar contraseña" autocomplete="new-password" />
+          <button type="button" class="button-primary" id="guardar">Guardar contraseña</button>
+          <p id="estado" class="status hidden"></p>
+        </div>
+      </section>
+    </div>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script>
+      const token = new URLSearchParams(window.location.search).get('token');
+      const nueva = document.getElementById('nueva');
+      const confirmar = document.getElementById('confirmar');
+      const guardar = document.getElementById('guardar');
+      const estado = document.getElementById('estado');
+
+      if (!token) {
+        AnkhApi.mostrar(estado, 'El enlace no es válido. Solicite uno nuevo desde "¿Olvidó su contraseña?".', true);
+        guardar.disabled = true;
+      }
+
+      guardar.addEventListener('click', async () => {
+        guardar.disabled = true;
+        try {
+          const r = await AnkhApi.post('/Recuperacion/Restablecer', {
+            token, nuevaPassword: nueva.value, confirmarPassword: confirmar.value
+          }, false);
+          AnkhApi.mostrar(estado, r.mensaje);
+          setTimeout(() => window.location.href = 'login.html', 1500);
+        } catch (error) {
+          AnkhApi.mostrar(estado, error.message, true);
+          guardar.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

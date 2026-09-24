@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANKH | Catálogo unificado</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="page">
+    <section class="section-card card">
+      <h2>Catálogo unificado</h2>
+      <p>La navegación de catálogo ahora está unificada en la página de inicio.</p>
+      <a class="button-primary" href="index.html">Ir al home</a>
+    </section>
+  </div>
+  <script>
+    window.location.replace('index.html');
+  </script>
+</body>
+
+</html>
+const matchesCategory = !state.category || state.category === 'Todas' || product.category === state.category;
+return matchesText && matchesCategory;
+});
+
+if (!filtered.length) {
+productGrid.innerHTML = '<div class="cart-empty">No se encontraron productos para esta búsqueda o categoría.</div>';
+return;
+}
+
+productGrid.innerHTML = filtered.map(product => {
+const isAdded = state.cart.some(item => item.id === product.id);
+return `
+<article class="product-card">
+  <img src="${product.image}" alt="${product.name}" />
+  <div class="product-info">
+    <h3>${product.name}</h3>
+    <p>${product.description}</p>
+    <div class="product-footer">
+      <span class="price">${formatMoney(product.price)}</span>
+      <button class="add-btn" data-id="${product.id}">${isAdded ? 'Añadido' : 'Agregar'}</button>
+    </div>
+  </div>
+</article>
+`;
+}).join('');
+
+productGrid.querySelectorAll('.add-btn').forEach(button => {
+button.addEventListener('click', () => addToCart(Number(button.dataset.id)));
+});
+}
+
+function renderCart() {
+if (!state.cart.length) {
+cartList.innerHTML = '<div class="cart-empty">Tu carrito está vacío.</div>';
+cartTotal.textContent = formatMoney(0);
+return;
+}
+
+cartList.innerHTML = state.cart.map(item => {
+const product = products.find(product => product.id === item.id);
+const subtotal = product.price * item.quantity;
+return `
+<div class="cart-item">
+  <div class="item-row">
+    <strong>${product.name}</strong>
+    <button class="button-tertiary remove-item" data-id="${item.id}">Eliminar</button>
+  </div>
+  <div class="item-row">
+    <span>${formatMoney(product.price)} c/u</span>
+    <div class="quantity-row">
+      <button class="button-secondary" data-id="${item.id}" data-action="decrease">−</button>
+      <span>${item.quantity}</span>
+      <button class="button-secondary" data-id="${item.id}" data-action="increase">+</button>
+    </div>
+  </div>
+  <small>Subtotal: ${formatMoney(subtotal)}</small>
+</div>
+`;
+}).join('');
+
+const total = state.cart.reduce((sum, item) => {
+const product = products.find(product => product.id === item.id);
+return sum + product.price * item.quantity;
+}, 0);
+
+cartTotal.textContent = formatMoney(total);
+
+cartList.querySelectorAll('.remove-item').forEach(button => {
+button.addEventListener('click', () => removeItem(Number(button.dataset.id)));
+});
+
+cartList.querySelectorAll('[data-action]').forEach(button => {
+button.addEventListener('click', () => changeQuantity(Number(button.dataset.id), button.dataset.action));
+});
+}
+
+function addToCart(productId) {
+const existing = state.cart.find(item => item.id === productId);
+if (existing) {
+existing.quantity += 1;
+} else {
+state.cart.push({ id: productId, quantity: 1 });
+}
+saveCart();
+updateCartBadge();
+renderCart();
+renderProducts();
+}
+
+function removeItem(productId) {
+state.cart = state.cart.filter(item => item.id !== productId);
+saveCart();
+updateCartBadge();
+renderCart();
+renderProducts();
+}
+
+function changeQuantity(productId, action) {
+const item = state.cart.find(entry => entry.id === productId);
+if (!item) return;
+item.quantity += action === 'increase' ? 1 : -1;
+if (item.quantity < 1) { state.cart=state.cart.filter(entry=> entry.id !== productId);
+  }
+  saveCart();
+  updateCartBadge();
+  renderCart();
+  renderProducts();
+  }
+
+  function renderCategoryButtons() {
+  const categories = ['Todas', ...new Set(products.map(product => product.category))];
+  categoryButtons.innerHTML = categories.map(category => {
+  const activeClass = state.category === category ? 'active' : '';
+  return `<button type="button" class="button-secondary category-pill ${activeClass}"
+    data-category="${category}">${category}</button>`;
+  }).join('');
+
+  categoryButtons.querySelectorAll('.category-pill').forEach(button => {
+  button.addEventListener('click', () => {
+  state.category = button.dataset.category;
+  renderCategoryButtons();
+  renderProducts();
+  });
+  });
+  }
+
+  function showCart() {
+  cartDrawer.classList.add('open');
+  }
+
+  function hideCart() {
+  cartDrawer.classList.remove('open');
+  }
+
+  function handleCheckout(event) {
+  event.preventDefault();
+  const address = document.getElementById('checkoutAddress').value.trim();
+  if (!address) return;
+  if (!state.cart.length) {
+  checkoutMessage.textContent = 'Agrega al menos un producto antes de pagar.';
+  checkoutMessage.style.color = '#d32f2f';
+  return;
+  }
+  checkoutMessage.textContent = `Pago simulado recibido. Pedido a ${address}.`;
+  checkoutMessage.style.color = 'var(--verde-principal)';
+  state.cart = [];
+  saveCart();
+  updateCartBadge();
+  renderCart();
+  renderProducts();
+  }
+
+  searchInput.addEventListener('input', event => {
+  state.filter = event.target.value;
+  renderProducts();
+  });
+
+  cartToggle.addEventListener('click', showCart);
+  closeCart.addEventListener('click', hideCart);
+  checkoutForm.addEventListener('submit', handleCheckout);
+
+  loadCart();
+  updateCartBadge();
+  const initialCategory = urlParams.get('categoria');
+  state.category = initialCategory ? decodeURIComponent(initialCategory) : 'Todas';
+  renderCategoryButtons();
+  renderProducts();
+  renderCart();
+  </script>
+  </body>
+
+  </html>
