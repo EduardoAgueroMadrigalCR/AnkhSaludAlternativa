@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANKH | Gestión de productos</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div>
+            <strong>ANKH</strong>
+            <span>Gestión de productos</span>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="index.html">Inicio</a>
+          <a href="index.html">Productos</a>
+          <a href="perfil.html">Perfil</a>
+        </nav>
+      </header>
+
+      <!-- Registrar / editar producto -->
+      <section class="section-card card" id="tarjetaFormulario">
+        <h2 id="tituloFormulario">Registrar producto</h2>
+        <div class="form-grid">
+          <div class="row-2">
+            <div>
+              <label class="etiqueta" for="nombre">Nombre *</label>
+              <input type="text" id="nombre" placeholder="Ej. Ashwagandha Premium" maxlength="120" />
+            </div>
+            <div>
+              <label class="etiqueta" for="categoria">Categoría *</label>
+              <select id="categoria"></select>
+            </div>
+          </div>
+          <div class="row-2">
+            <div>
+              <label class="etiqueta" for="precio">Precio (₡) *</label>
+              <input type="number" id="precio" placeholder="0" min="0.01" step="0.01" />
+            </div>
+            <div>
+              <label class="etiqueta" for="imagen">Imagen (ruta o URL)</label>
+              <input type="text" id="imagen" placeholder="images/mi-producto.jpg" maxlength="300" />
+            </div>
+          </div>
+          <div>
+            <label class="etiqueta" for="descripcion">Descripción corta</label>
+            <input type="text" id="descripcion" placeholder="Se muestra en las tarjetas del catálogo" maxlength="250" />
+          </div>
+          <div>
+            <label class="etiqueta" for="detalles">Detalles</label>
+            <textarea id="detalles" placeholder="Presentación, contenido, beneficios…" maxlength="1000"></textarea>
+          </div>
+          <img id="vistaPrevia" class="vista-previa hidden" alt="Vista previa de la imagen" />
+          <label class="check-line hidden" id="filaActivo">
+            <input type="checkbox" id="activo" checked /> Producto activo
+          </label>
+          <div class="profile-actions">
+            <button class="button-primary" id="guardar" type="button">Registrar producto</button>
+            <button class="button-secondary hidden" id="cancelar" type="button">Cancelar edición</button>
+          </div>
+          <p id="mensajeFormulario" class="status hidden"></p>
+        </div>
+      </section>
+
+      <!-- Listado -->
+      <section class="section-card card">
+        <h2>Productos registrados</h2>
+        <p id="notaSoloLectura" class="status hidden" style="margin-bottom:12px">Su rol solo permite consultar productos.</p>
+        <div class="filtros-fila">
+          <input type="search" id="filtroTexto" placeholder="Buscar por nombre, descripción o categoría" />
+          <select id="filtroCategoria"></select>
+          <select id="filtroEstado">
+            <option value="">Todos los estados</option>
+            <option value="activos">Solo activos</option>
+            <option value="inactivos">Solo inactivos</option>
+          </select>
+        </div>
+        <p id="mensajeLista" class="status hidden" style="margin-bottom:12px"></p>
+        <div class="tabla-scroll">
+          <table class="tabla-usuarios">
+            <thead>
+              <tr>
+                <th></th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Estado</th>
+                <th class="col-acciones"></th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoProductos"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script>
+      // Cualquier rol autenticado puede consultar; solo Administrador y Encargado de Inventario editan
+      const yo = AnkhApi.requiereSesion();
+      const puedeEditar = AnkhApi.puedeGestionarCatalogo(yo);
+
+      const $ = (id) => document.getElementById(id);
+      const campos = {
+        nombre: $('nombre'), categoria: $('categoria'), precio: $('precio'), imagen: $('imagen'),
+        descripcion: $('descripcion'), detalles: $('detalles'), activo: $('activo')
+      };
+      let categorias = [];
+      let productos = [];
+      let editandoId = null;
+
+      function pintarSelectorCategoria(seleccionada) {
+        // Para productos nuevos solo categorías activas; al editar se conserva la actual aunque esté inactiva
+        const opciones = categorias
+          .filter(c => c.activa || c.id === seleccionada)
+          .map(c => `<option value="${c.id}" ${c.id === seleccionada ? 'selected' : ''}>${AnkhApi.esc(c.nombre)}${c.activa ? '' : ' (inactiva)'}</option>`);
+        campos.categoria.innerHTML = '<option value="">Seleccione una categoría</option>' + opciones.join('');
+      }
+
+      function pintarFiltroCategorias() {
+        const actual = $('filtroCategoria').value;
+        $('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' +
+          categorias.map(c => `<option value="${c.id}">${AnkhApi.esc(c.nombre)}</option>`).join('');
+        $('filtroCategoria').value = actual;
+      }
+
+      function pintarTabla() {
+        const texto = $('filtroTexto').value.trim().toLowerCase();
+        const idCategoria = Number($('filtroCategoria').value) || 0;
+        const estado = $('filtroEstado').value;
+
+        const visibles = productos.filter(p =>
+          (!texto || [p.nombre, p.descripcion, p.categoria].some(v => (v || '').toLowerCase().includes(texto))) &&
+          (!idCategoria || p.idCategoria === idCategoria) &&
+          (!estado || (estado === 'activos') === p.activo));
+
+        $('cuerpoProductos').innerHTML = visibles.length ? visibles.map(p => `
+          <tr class="${p.activo ? '' : 'fila-inactiva'}">
+            <td>${p.imagen ? `<img class="miniatura" src="${AnkhApi.escAttr(p.imagen)}" alt="" onerror="this.style.visibility='hidden'" />` : ''}</td>
+            <td><strong>${AnkhApi.esc(p.nombre)}</strong><br /><small>${AnkhApi.esc(p.descripcion)}</small></td>
+            <td>${AnkhApi.esc(p.categoria)}</td>
+            <td>${AnkhApi.colones(p.precio)}</td>
+            <td><span class="estado-pill ${p.activo ? '' : 'inactivo'}">${p.activo ? 'Activo' : 'Inactivo'}</span></td>
+            <td class="col-acciones">${puedeEditar ? `<button class="button-secondary" data-editar="${p.id}" type="button">Editar</button>` : ''}</td>
+          </tr>`).join('')
+          : '<tr><td colspan="6">No hay productos que coincidan con la búsqueda.</td></tr>';
+      }
+
+      function vistaPrevia() {
+        const ruta = campos.imagen.value.trim();
+        $('vistaPrevia').classList.toggle('hidden', !ruta);
+        if (ruta) $('vistaPrevia').src = ruta;
+      }
+
+      function modoRegistro() {
+        editandoId = null;
+        Object.values(campos).forEach(c => { if (c.type !== 'checkbox') c.value = ''; });
+        campos.activo.checked = true;
+        pintarSelectorCategoria(null);
+        $('tituloFormulario').textContent = 'Registrar producto';
+        $('guardar').textContent = 'Registrar producto';
+        $('cancelar').classList.add('hidden');
+        $('filaActivo').classList.add('hidden');
+        vistaPrevia();
+      }
+
+      function modoEdicion(p) {
+        editandoId = p.id;
+        campos.nombre.value = p.nombre;
+        campos.precio.value = p.precio;
+        campos.imagen.value = p.imagen || '';
+        campos.descripcion.value = p.descripcion || '';
+        campos.detalles.value = p.detalles || '';
+        campos.activo.checked = p.activo;
+        pintarSelectorCategoria(p.idCategoria);
+        $('tituloFormulario').textContent = 'Editar producto';
+        $('guardar').textContent = 'Guardar cambios';
+        $('cancelar').classList.remove('hidden');
+        $('filaActivo').classList.remove('hidden');
+        $('mensajeFormulario').classList.add('hidden');
+        vistaPrevia();
+        $('tarjetaFormulario').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        campos.nombre.focus();
+      }
+
+      async function cargar() {
+        try {
+          [categorias, productos] = await Promise.all([AnkhApi.get('/Categoria'), AnkhApi.get('/Producto')]);
+          pintarFiltroCategorias();
+          if (puedeEditar && editandoId === null) pintarSelectorCategoria(null);
+          pintarTabla();
+        } catch (error) {
+          AnkhApi.mostrar($('mensajeLista'), error.message, true);
+        }
+      }
+
+      async function guardar() {
+        const cuerpo = {
+          nombre: campos.nombre.value.trim(),
+          descripcion: campos.descripcion.value.trim(),
+          detalles: campos.detalles.value.trim(),
+          idCategoria: Number(campos.categoria.value) || 0,
+          precio: Number(campos.precio.value) || 0,
+          imagen: campos.imagen.value.trim()
+        };
+        const mensaje = $('mensajeFormulario');
+        try {
+          if (editandoId === null) {
+            await AnkhApi.post('/Producto', cuerpo);
+            modoRegistro();
+            AnkhApi.mostrar(mensaje, 'Producto registrado correctamente.');
+          } else {
+            await AnkhApi.put(`/Producto/${editandoId}`, { ...cuerpo, activo: campos.activo.checked });
+            modoRegistro();
+            AnkhApi.mostrar(mensaje, 'Producto actualizado correctamente.');
+          }
+          cargar();
+        } catch (error) {
+          AnkhApi.mostrar(mensaje, error.message, true);
+        }
+      }
+
+      ['filtroTexto', 'filtroCategoria', 'filtroEstado'].forEach(id => {
+        $(id).addEventListener(id === 'filtroTexto' ? 'input' : 'change', pintarTabla);
+      });
+
+      if (puedeEditar) {
+        $('guardar').addEventListener('click', guardar);
+        $('cancelar').addEventListener('click', () => { modoRegistro(); $('mensajeFormulario').classList.add('hidden'); });
+        campos.imagen.addEventListener('input', vistaPrevia);
+        $('cuerpoProductos').addEventListener('click', (e) => {
+          const boton = e.target.closest('button[data-editar]');
+          if (!boton) return;
+          const producto = productos.find(p => p.id === Number(boton.dataset.editar));
+          if (producto) modoEdicion(producto);
+        });
+      } else if (yo) {
+        $('tarjetaFormulario').classList.add('hidden');
+        document.body.classList.add('solo-lectura');
+        $('notaSoloLectura').classList.remove('hidden');
+      }
+
+      if (yo) cargar();
+    </script>
+  </body>
+</html>

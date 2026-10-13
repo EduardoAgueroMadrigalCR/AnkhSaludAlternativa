@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANKH | Categorías</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div>
+            <strong>ANKH</strong>
+            <span>Categorías de productos</span>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="index.html">Inicio</a>
+          <a href="index.html">Productos</a>
+          <a href="perfil.html">Perfil</a>
+        </nav>
+      </header>
+
+      <!-- Crear / editar categoría -->
+      <section class="section-card card" id="tarjetaFormulario">
+        <h2 id="tituloFormulario">Nueva categoría</h2>
+        <div class="form-grid">
+          <div>
+            <label class="etiqueta" for="nombre">Nombre *</label>
+            <input type="text" id="nombre" placeholder="Ej. Bienestar" maxlength="80" />
+          </div>
+          <div>
+            <label class="etiqueta" for="descripcion">Descripción</label>
+            <textarea id="descripcion" placeholder="Qué tipo de productos agrupa esta categoría" maxlength="250"></textarea>
+          </div>
+          <label class="check-line hidden" id="filaActiva">
+            <input type="checkbox" id="activa" checked /> Categoría activa
+          </label>
+          <p id="notaActiva" class="status hidden">
+            Para desactivar una categoría primero desactive o reasigne sus productos activos.
+          </p>
+          <div class="profile-actions">
+            <button class="button-primary" id="guardar" type="button">Crear categoría</button>
+            <button class="button-secondary hidden" id="cancelar" type="button">Cancelar edición</button>
+          </div>
+          <p id="mensajeFormulario" class="status hidden"></p>
+        </div>
+      </section>
+
+      <!-- Listado -->
+      <section class="section-card card">
+        <h2>Categorías registradas</h2>
+        <p id="mensajeLista" class="status hidden" style="margin-bottom:12px"></p>
+        <div class="tabla-scroll">
+          <table class="tabla-usuarios">
+            <thead>
+              <tr><th>Nombre</th><th>Descripción</th><th>Productos activos</th><th>Estado</th><th></th></tr>
+            </thead>
+            <tbody id="cuerpoCategorias"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script>
+      // Solo Administrador y Encargado de Inventario administran categorías
+      const yo = AnkhApi.requiereRol('Administrador', 'Encargado de Inventario');
+
+      const $ = (id) => document.getElementById(id);
+      const nombre = $('nombre');
+      const descripcion = $('descripcion');
+      const activa = $('activa');
+      let categorias = [];
+      let editandoId = null;
+
+      function pintarTabla() {
+        $('cuerpoCategorias').innerHTML = categorias.length ? categorias.map(c => `
+          <tr class="${c.activa ? '' : 'fila-inactiva'}">
+            <td><strong>${AnkhApi.esc(c.nombre)}</strong></td>
+            <td>${AnkhApi.esc(c.descripcion) || '—'}</td>
+            <td>${c.productosActivos}</td>
+            <td><span class="estado-pill ${c.activa ? '' : 'inactivo'}">${c.activa ? 'Activa' : 'Inactiva'}</span></td>
+            <td><button class="button-secondary" data-editar="${c.id}" type="button">Editar</button></td>
+          </tr>`).join('')
+          : '<tr><td colspan="5">Aún no hay categorías registradas.</td></tr>';
+      }
+
+      function modoCreacion() {
+        editandoId = null;
+        nombre.value = '';
+        descripcion.value = '';
+        activa.checked = true;
+        $('tituloFormulario').textContent = 'Nueva categoría';
+        $('guardar').textContent = 'Crear categoría';
+        $('cancelar').classList.add('hidden');
+        $('filaActiva').classList.add('hidden');
+        $('notaActiva').classList.add('hidden');
+      }
+
+      function modoEdicion(c) {
+        editandoId = c.id;
+        nombre.value = c.nombre;
+        descripcion.value = c.descripcion || '';
+        activa.checked = c.activa;
+        $('tituloFormulario').textContent = 'Editar categoría';
+        $('guardar').textContent = 'Guardar cambios';
+        $('cancelar').classList.remove('hidden');
+        $('filaActiva').classList.remove('hidden');
+        $('notaActiva').classList.remove('hidden');
+        $('mensajeFormulario').classList.add('hidden');
+        $('tarjetaFormulario').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        nombre.focus();
+      }
+
+      async function cargar() {
+        try {
+          categorias = await AnkhApi.get('/Categoria');
+          pintarTabla();
+        } catch (error) {
+          AnkhApi.mostrar($('mensajeLista'), error.message, true);
+        }
+      }
+
+      async function guardar() {
+        const cuerpo = { nombre: nombre.value.trim(), descripcion: descripcion.value.trim() };
+        const mensaje = $('mensajeFormulario');
+        try {
+          if (editandoId === null) {
+            await AnkhApi.post('/Categoria', cuerpo);
+            modoCreacion();
+            AnkhApi.mostrar(mensaje, 'Categoría creada correctamente.');
+          } else {
+            await AnkhApi.put(`/Categoria/${editandoId}`, { ...cuerpo, activa: activa.checked });
+            modoCreacion();
+            AnkhApi.mostrar(mensaje, 'Categoría actualizada correctamente.');
+          }
+          cargar();
+        } catch (error) {
+          AnkhApi.mostrar(mensaje, error.message, true);
+        }
+      }
+
+      $('guardar').addEventListener('click', guardar);
+      $('cancelar').addEventListener('click', () => { modoCreacion(); $('mensajeFormulario').classList.add('hidden'); });
+      $('cuerpoCategorias').addEventListener('click', (e) => {
+        const boton = e.target.closest('button[data-editar]');
+        if (!boton) return;
+        const categoria = categorias.find(c => c.id === Number(boton.dataset.editar));
+        if (categoria) modoEdicion(categoria);
+      });
+
+      if (yo) cargar();
+    </script>
+  </body>
+</html>
