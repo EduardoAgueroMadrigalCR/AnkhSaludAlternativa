@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANKH | Usuarios</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div>
+            <strong>ANKH</strong>
+            <span>Usuarios y roles</span>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="index.html">Inicio</a>
+          <a href="perfil.html">Perfil</a>
+        </nav>
+      </header>
+
+      <!-- RF-05: crear usuario -->
+      <section class="section-card card">
+        <h2>Nuevo usuario</h2>
+        <div class="form-grid">
+          <div class="row-2">
+            <input type="text" id="nuevoNombre" placeholder="Nombre completo" maxlength="100" />
+            <input type="email" id="nuevoCorreo" placeholder="Correo electrónico" maxlength="150" />
+          </div>
+          <select id="nuevoRol"></select>
+          <p class="status">El sistema genera una contraseña temporal y la envía al correo del usuario.</p>
+          <div class="profile-actions">
+            <button class="button-primary" id="crearUsuario">Crear usuario</button>
+          </div>
+          <p id="mensajeCrear" class="status hidden"></p>
+        </div>
+      </section>
+
+      <!-- RF-06 y RF-08: roles, desactivar y reactivar -->
+      <section class="section-card card">
+        <h2>Personal registrado</h2>
+        <p id="mensajeLista" class="status hidden" style="margin-bottom:12px"></p>
+        <div class="tabla-scroll">
+          <table class="tabla-usuarios">
+            <thead>
+              <tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Último acceso</th><th></th></tr>
+            </thead>
+            <tbody id="cuerpoUsuarios"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script>
+      const yo = AnkhApi.requiereAdmin();
+
+      const nuevoNombre = document.getElementById('nuevoNombre');
+      const nuevoCorreo = document.getElementById('nuevoCorreo');
+      const nuevoRol = document.getElementById('nuevoRol');
+      const mensajeCrear = document.getElementById('mensajeCrear');
+      const mensajeLista = document.getElementById('mensajeLista');
+      const cuerpoUsuarios = document.getElementById('cuerpoUsuarios');
+      let roles = [];
+
+      function opcionesRol(seleccionado) {
+        return roles.map(r => `<option value="${r.id}" ${r.id === seleccionado ? 'selected' : ''}>${AnkhApi.esc(r.nombre)}</option>`).join('');
+      }
+
+      function pintarUsuarios(usuarios) {
+        cuerpoUsuarios.innerHTML = usuarios.map(u => {
+          const esYo = yo && u.id === yo.idUsuario;
+          const boton = esYo ? '' : (u.activo
+            ? `<button class="button-secondary" data-accion="Desactivar" data-id="${u.id}">Desactivar usuario</button>`
+            : `<button class="button-primary" data-accion="Reactivar" data-id="${u.id}">Reactivar</button>`);
+          return `<tr>
+            <td>${AnkhApi.esc(u.nombre)}</td>
+            <td>${AnkhApi.esc(u.correoElectronico)}</td>
+            <td><select class="cambiar-rol" data-id="${u.id}" ${u.activo ? '' : 'disabled'}>${opcionesRol(u.idRol)}</select></td>
+            <td>${u.activo ? 'Activo' : 'Desactivado'}</td>
+            <td>${u.ultimoLogin ? new Date(u.ultimoLogin).toLocaleString('es-CR') : '—'}</td>
+            <td>${boton}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      async function cargar() {
+        try {
+          const [listaRoles, usuarios] = await Promise.all([AnkhApi.get('/Usuario/Roles'), AnkhApi.get('/Usuario')]);
+          roles = listaRoles;
+          nuevoRol.innerHTML = '<option value="">Seleccione un rol</option>' + opcionesRol(null);
+          pintarUsuarios(usuarios);
+        } catch (error) {
+          AnkhApi.mostrar(mensajeLista, error.message, true);
+        }
+      }
+
+      // RF-05
+      document.getElementById('crearUsuario').addEventListener('click', async () => {
+        try {
+          const r = await AnkhApi.post('/Usuario', {
+            nombre: nuevoNombre.value.trim(),
+            correoElectronico: nuevoCorreo.value.trim(),
+            idRol: Number(nuevoRol.value) || 0
+          });
+          AnkhApi.mostrar(mensajeCrear, r.correoEnviado
+            ? 'Usuario creado. Se envió un correo con las credenciales de acceso.'
+            : 'Usuario creado, pero no se pudo enviar el correo. Restablezca su contraseña desde "¿Olvidó su contraseña?".', !r.correoEnviado);
+          nuevoNombre.value = ''; nuevoCorreo.value = ''; nuevoRol.value = '';
+          cargar();
+        } catch (error) {
+          AnkhApi.mostrar(mensajeCrear, error.message, true);
+        }
+      });
+
+      // RF-06: cambiar rol
+      cuerpoUsuarios.addEventListener('change', async (e) => {
+        if (!e.target.classList.contains('cambiar-rol')) return;
+        try {
+          await AnkhApi.put(`/Usuario/${e.target.dataset.id}/Rol`, { idRol: Number(e.target.value) });
+          AnkhApi.mostrar(mensajeLista, 'Rol actualizado. Los permisos se aplican de inmediato.');
+        } catch (error) {
+          AnkhApi.mostrar(mensajeLista, error.message, true);
+        }
+        cargar();
+      });
+
+      // RF-08: desactivar / reactivar con confirmacion
+      cuerpoUsuarios.addEventListener('click', async (e) => {
+        const boton = e.target.closest('button[data-accion]');
+        if (!boton) return;
+        const { accion, id } = boton.dataset;
+        if (accion === 'Desactivar' && !confirm('¿Desactivar esta cuenta? El usuario no podrá iniciar sesión.')) return;
+        try {
+          await AnkhApi.put(`/Usuario/${id}/${accion}`);
+          AnkhApi.mostrar(mensajeLista, accion === 'Desactivar' ? 'Cuenta desactivada.' : 'Cuenta reactivada con su rol anterior.');
+        } catch (error) {
+          AnkhApi.mostrar(mensajeLista, error.message, true);
+        }
+        cargar();
+      });
+
+      if (yo) cargar();
+    </script>
+  </body>
+</html>

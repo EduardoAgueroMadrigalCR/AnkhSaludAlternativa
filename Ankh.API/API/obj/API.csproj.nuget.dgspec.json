@@ -1,0 +1,478 @@
+{
+  "format": 1,
+  "restore": {
+    "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj",
+        "projectName": "Abstracciones",
+        "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj",
+        "packagesPath": "C:\\Users\\Eduardo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Eduardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.318/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj",
+        "projectName": "API",
+        "projectPath": "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj",
+        "packagesPath": "C:\\Users\\Eduardo\\.nuget\\packages\\",
+        "outputPath": "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Eduardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj": {
+                "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj"
+              },
+              "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\DA\\DA.csproj": {
+                "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\DA\\DA.csproj"
+              },
+              "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Flujo\\Flujo.csproj": {
+                "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Flujo\\Flujo.csproj"
+              },
+              "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Reglas\\Reglas.csproj": {
+                "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Reglas\\Reglas.csproj"
+              },
+              "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Servicios\\Servicios.csproj": {
+                "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Servicios\\Servicios.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.7, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.6.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.318/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\DA\\DA.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\DA\\DA.csproj",
+        "projectName": "DA",
+        "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\DA\\DA.csproj",
+        "packagesPath": "C:\\Users\\Eduardo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\DA\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Eduardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj": {
+                "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.35, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.318/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Flujo\\Flujo.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Flujo\\Flujo.csproj",
+        "projectName": "Flujo",
+        "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Flujo\\Flujo.csproj",
+        "packagesPath": "C:\\Users\\Eduardo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Flujo\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Eduardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj": {
+                "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.104.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.318/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Reglas\\Reglas.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Reglas\\Reglas.csproj",
+        "projectName": "Reglas",
+        "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Reglas\\Reglas.csproj",
+        "packagesPath": "C:\\Users\\Eduardo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Reglas\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Eduardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj": {
+                "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.6.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.318/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Servicios\\Servicios.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Servicios\\Servicios.csproj",
+        "projectName": "Servicios",
+        "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Servicios\\Servicios.csproj",
+        "packagesPath": "C:\\Users\\Eduardo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Servicios\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Eduardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj": {
+                "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.318/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

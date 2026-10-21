@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANKH | Pedido</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="site-brand">
+        <img src="images/ANKH-logo.png" alt="ANKH logo" />
+        <div>
+          <strong>ANKH</strong>
+          <span>Pedido</span>
+        </div>
+      </div>
+      <nav class="site-nav">
+        <a href="index.html">Inicio</a>
+        <a href="perfil.html">Perfil</a>
+      </nav>
+    </header>
+
+    <section class="section-card card">
+      <h2>Detalle del pedido</h2>
+      <div id="orderDetails"></div>
+    </section>
+  </div>
+
+  <script>
+    const orderDetails = document.getElementById('orderDetails');
+
+    function formatMoney(value) {
+      return '₡' + value.toLocaleString('es-CO');
+    }
+
+    function loadOrders() {
+      const saved = localStorage.getItem('ankh-orders');
+      return saved ? JSON.parse(saved) : [];
+    }
+
+    function renderOrder(order) {
+      return `
+          <div class="invoice-card">
+            <div class="invoice-header">
+              <span>Factura de pedido</span>
+              <strong>${order.id}</strong>
+            </div>
+            <div class="invoice-row">
+              <span>Fecha</span>
+              <strong>${new Date(order.date).toLocaleString('es-CO')}</strong>
+            </div>
+            <div class="invoice-row">
+              <span>Cliente</span>
+              <strong>${order.userName || 'Invitado'}</strong>
+            </div>
+            <div class="invoice-note">Dirección: ${order.address}</div>
+            <div class="invoice-note">Correo: ${order.userEmail || 'No registrado'}</div>
+            <div class="invoice-note">Estado: Confirmado</div>
+            ${order.items.map(item => `
+              <div class="invoice-item">
+                <span>${item.name} x${item.quantity}</span>
+                <strong>${formatMoney(item.subtotal)}</strong>
+              </div>
+            `).join('')}
+            <div class="invoice-total">
+              <span>Total</span>
+              <strong>${formatMoney(order.total)}</strong>
+            </div>
+            <div class="invoice-note">Gracias por comprar con ANKH.</div>
+            <div class="invoice-row">
+              <a class="button-secondary" href="perfil.html">Volver al perfil</a>
+              <a class="button-primary" href="index.html">Seguir comprando</a>
+            </div>
+          </div>
+        `;
+    }
+
+    const query = new URLSearchParams(window.location.search);
+    const orderId = query.get('orderId');
+    const orders = loadOrders();
+    const order = orders.find(item => item.id === orderId);
+
+    if (!order) {
+      orderDetails.innerHTML = `
+          <div class="cart-empty">Pedido no encontrado.</div>
+          <a class="button-secondary" href="perfil.html">Volver al perfil</a>
+        `;
+    } else {
+      orderDetails.innerHTML = renderOrder(order);
+    }
+  </script>
+</body>
+
+</html>

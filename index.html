@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANKH | Inicio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div>
+            <strong>ANKH</strong>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="index.html">Inicio</a>
+          <a id="navProfile" href="perfil.html">Perfil</a>
+        </nav>
+      </header>
+
+      <section class="hero-card hero">
+        <div class="promo-panel hero-promo-panel">
+          <div class="promo-panel-image">
+            <img id="promoImage" src="images/ASHWAGANDHA.jpg" alt="Promoción ANKH" />
+            <div class="promo-nav-buttons">
+              <button type="button" class="carousel-arrow promo-nav" id="promoPrev">‹</button>
+              <button type="button" class="carousel-arrow promo-nav" id="promoNext">›</button>
+            </div>
+          </div>
+          <div class="promo-panel-copy">
+            <span class="badge badge-soft" id="promoLabel">Oferta limitada</span>
+            <h1 id="promoTitle">Set de confort premium</h1>
+            <p id="promoDescription">Ahorra 20% en el nuevo set para casa con diseño ergonómico y materiales suaves.</p>
+            <div class="promo-panel-footer">
+              <strong id="promoPrice">Desde $129.000</strong>
+              <a class="button-primary button-link" id="promoButton" href="index.html?categoria=Hogar">Ver promoción</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card card explore-section">
+        <div class="explore-grid">
+          <aside class="explore-sidebar">
+            <div class="sidebar-group">
+              <h2>Ordena y filtra</h2>
+              <p class="sidebar-note">Encuentra productos más rápido con filtros básicos.</p>
+            </div>
+            <div class="sidebar-group">
+              <label for="searchInput">Buscar por nombre</label>
+              <input type="search" id="searchInput" class="sort-select" placeholder="Ej. colágeno" maxlength="150" />
+            </div>
+            <div class="sidebar-group">
+              <label for="brandSelect">Marca</label>
+              <select id="brandSelect" class="sort-select">
+                <option value="">Todas las marcas</option>
+              </select>
+            </div>
+            <div class="sidebar-group">
+              <label for="sortSelect">Ordenar por</label>
+              <select id="sortSelect" class="sort-select">
+                <option value="popular">Lo más popular</option>
+                <option value="priceLow">Precio: más bajo</option>
+                <option value="priceHigh">Precio: más alto</option>
+                <option value="newest">Más nuevo</option>
+              </select>
+            </div>
+            <div class="sidebar-group">
+              <p class="sidebar-title">Filtros</p>
+              <label class="filter-line"><input type="checkbox" id="filterStock" checked /> Solo en stock</label>
+              <label class="filter-line"><input type="checkbox" id="filterNew" /> Nuevos (últimos 30 días)</label>
+            </div>
+            <div class="sidebar-group">
+              <p class="sidebar-title">Categorías</p>
+              <div class="category-buttons category-sidebar-buttons" id="categoryButtons">
+                <button type="button" class="category-pill active" data-category="">Todas</button>
+              </div>
+              <button type="button" class="button-tertiary" id="clearFilters" style="margin-top:12px">Limpiar filtros</button>
+            </div>
+          </aside>
+          <div class="explore-content">
+            <div class="section-header">
+              <div>
+                <h2>Productos</h2>
+                <p class="section-note">Busca por nombre y filtra por marca o categoría.</p>
+              </div>
+              <span id="productCount" class="product-count">Cargando...</span>
+            </div>
+            <div class="product-preview-grid" id="homeProductGrid"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <button class="cart-toggle" id="cartToggle" aria-label="Abrir carrito">
+      <svg viewBox="0 0 24 24" class="cart-icon" aria-hidden="true">
+        <path d="M7 4H5L4 6H7L7 4ZM6 9H19L21 20H6L6 9ZM9 22A1 1 0 1 0 9 20A1 1 0 0 0 9 22ZM17 22A1 1 0 1 0 17 20A1 1 0 0 0 17 22Z" />
+      </svg>
+      <span class="cart-badge" id="cartCount">0</span>
+    </button>
+
+    <aside class="cart-drawer" id="cartDrawer">
+      <div class="cart-header">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+          <div>
+            <h2>Tu carrito</h2>
+            <p style="margin: 6px 0 0; color: var(--gris-medio);">Revisa tus artículos y finaliza tu compra.</p>
+          </div>
+          <button class="button-tertiary" id="closeCart" style="font-size:1.5rem;">×</button>
+        </div>
+      </div>
+
+      <div class="cart-list" id="cartList"></div>
+
+      <div class="cart-footer">
+        <div class="total-row">
+          <span>Total</span>
+          <strong id="cartTotal">₡0</strong>
+        </div>
+        <form class="checkout-form" id="checkoutForm">
+          <input type="text" id="checkoutAddress" placeholder="Dirección de entrega" required />
+          <button class="button-primary" type="submit">Pagar</button>
+        </form>
+        <div class="checkout-receipt hidden" id="checkoutReceipt"></div>
+        <p class="checkout-message hidden" id="checkoutMessage"></p>
+      </div>
+    </aside>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script src="scripts/ankh-productos.js"></script>
+    <script src="scripts/home-data.js"></script>
+    <script src="scripts/index.js"></script>
+  </body>
+</html>

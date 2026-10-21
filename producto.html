@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANKH | Producto</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-brand">
+          <img src="images/ANKH-logo.png" alt="ANKH logo" />
+          <div>
+            <strong>ANKH</strong>
+            <span>Detalle del producto</span>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="index.html">Inicio</a>
+
+          <a href="perfil.html">Perfil</a>
+        </nav>
+      </header>
+
+      <section class="section-card card product-detail-card">
+        <div id="productDetail"></div>
+      </section>
+    </div>
+
+    <script src="scripts/ankh-api.js"></script>
+    <script src="scripts/ankh-productos.js"></script>
+    <script>
+      const productDetail = document.getElementById('productDetail');
+      const query = new URLSearchParams(window.location.search);
+      const productId = query.get('id');
+      const IMAGEN_POR_DEFECTO = 'images/ANKH-logo.png';
+
+      function formatMoney(value) {
+        return '₡' + value.toLocaleString('es-CO');
+      }
+
+      function esc(valor) {
+        return String(valor == null ? '' : valor)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      function mostrarNoEncontrado(mensaje) {
+        productDetail.innerHTML = `
+          <div class="cart-empty">${esc(mensaje)}</div>
+          <a class="button-primary" href="index.html">Volver a productos</a>
+        `;
+      }
+
+      function pintarProducto(product) {
+        const disponible = !product.descontinuado && product.stock > 0;
+        const highlights = [
+          'Material premium y duradero',
+          'Diseño ergonómico y moderno',
+          'Ideal para uso diario en el hogar',
+          'Envío rápido y seguro'
+        ];
+
+        productDetail.innerHTML = `
+          <div class="product-detail-inner">
+            <div class="product-detail-media">
+              <img src="${esc(product.imagenUrl || IMAGEN_POR_DEFECTO)}" alt="${esc(product.nombre)}"
+                   onerror="this.onerror=null;this.src='${IMAGEN_POR_DEFECTO}'" />
+            </div>
+            <div class="product-detail-info">
+              <span class="badge badge-soft">${esc(product.categoria)}</span>
+              <h2>${esc(product.nombre)}</h2>
+              <p class="product-lead">${esc(product.descripcion || '')}</p>
+              <div class="product-detail-meta">
+                <strong>${formatMoney(product.precio)}</strong>
+                <div class="product-detail-actions">
+                  ${disponible
+                    ? '<button class="button-primary" id="addToCartBtn" type="button">Agregar al carrito</button>'
+                    : '<button class="button-primary" type="button" disabled>No disponible</button>'}
+                  <a class="button-secondary" href="index.html">Seguir viendo</a>
+                </div>
+              </div>
+              <div class="product-detail-section">
+                <h3>Lo que obtienes</h3>
+                <p>Marca: ${esc(product.marca)} · Código: ${esc(product.codigoProducto)}</p>
+                <p>${product.descontinuado ? 'Este producto fue descontinuado.' : (product.stock > 0 ? `Disponible: ${product.stock} unidades.` : 'Producto agotado por el momento.')}</p>
+                <ul class="product-features">
+                  ${highlights.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+              </div>
+              <div class="product-detail-section">
+                <h3>Beneficios clave</h3>
+                <div class="product-stats-grid">
+                  <div>
+                    <strong>4.8</strong>
+                    <span>Calificación</span>
+                  </div>
+                  <div>
+                    <strong>24h</strong>
+                    <span>Despacho rápido</span>
+                  </div>
+                  <div>
+                    <strong>100%</strong>
+                    <span>Satisfacción</span>
+                  </div>
+                </div>
+              </div>
+              <p id="productMessage" class="status hidden"></p>
+            </div>
+          </div>
+        `;
+
+        const addToCartBtn = document.getElementById('addToCartBtn');
+        const productMessage = document.getElementById('productMessage');
+
+        if (addToCartBtn) {
+          addToCartBtn.addEventListener('click', () => {
+            let cart = [];
+            try { cart = JSON.parse(localStorage.getItem('ankh-cart') || '[]'); } catch (error) { cart = []; }
+            const item = cart.find(entry => entry.id === product.id);
+            if (item) {
+              item.quantity += 1;
+            } else {
+              cart.push({ 
+                id: product.id, 
+                quantity: 1, 
+                name: product.nombre, 
+                price: product.precio,
+                imagenUrl: product.imagenUrl || IMAGEN_POR_DEFECTO 
+              });
+            }
+            localStorage.setItem('ankh-cart', JSON.stringify(cart));
+            productMessage.textContent = 'Producto agregado al carrito.';
+            productMessage.classList.remove('hidden');
+          });
+        }
+      }
+
+      if (!productId) {
+        mostrarNoEncontrado('Producto no encontrado.');
+      } else {
+        AnkhProductos.obtener(productId)
+          .then(pintarProducto)
+          .catch(() => mostrarNoEncontrado('Producto no encontrado.'));
+      }
+    </script>
+  </body>
+</html>

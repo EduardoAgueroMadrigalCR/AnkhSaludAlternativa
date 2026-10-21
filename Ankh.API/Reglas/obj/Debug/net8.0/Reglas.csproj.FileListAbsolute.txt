@@ -1,0 +1,15 @@
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\bin\Debug\net8.0\Reglas.deps.json
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\bin\Debug\net8.0\Reglas.dll
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\bin\Debug\net8.0\Reglas.pdb
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\bin\Debug\net8.0\Abstracciones.dll
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\bin\Debug\net8.0\Abstracciones.pdb
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\Reglas.csproj.AssemblyReference.cache
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\Reglas.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\Reglas.AssemblyInfoInputs.cache
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\Reglas.AssemblyInfo.cs
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\Reglas.csproj.CoreCompileInputs.cache
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\Reglas.csproj.Up2Date
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\Reglas.dll
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\refint\Reglas.dll
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\Reglas.pdb
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Reglas\obj\Debug\net8.0\ref\Reglas.dll

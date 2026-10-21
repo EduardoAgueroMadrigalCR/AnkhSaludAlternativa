@@ -1,0 +1,23 @@
+CREATE TABLE [dbo].[Productos] (
+    [Id]                 UNIQUEIDENTIFIER NOT NULL,
+    [CodigoProducto]     VARCHAR(30)      NOT NULL,
+    [Nombre]             VARCHAR(150)     NOT NULL,
+    [Descripcion]        VARCHAR(500)     NULL,
+    [IdMarca]            UNIQUEIDENTIFIER NOT NULL,
+    [IdCategoria]        UNIQUEIDENTIFIER NOT NULL,
+    [ImagenUrl]          VARCHAR(300)     NULL,
+    [Precio]             DECIMAL(10,2)    NOT NULL,
+    [Stock]              INT              NOT NULL CONSTRAINT [DF_Productos_Stock] DEFAULT (0),
+    [Descontinuado]      BIT              NOT NULL CONSTRAINT [DF_Productos_Descontinuado] DEFAULT (0),
+    [FechaDescontinuado] DATETIME         NULL,
+    [FechaCreacion]      DATETIME         NOT NULL CONSTRAINT [DF_Productos_FechaCreacion] DEFAULT (GETDATE()),
+    [FechaModificacion]  DATETIME         NULL,
+    [UsuarioCrea]        UNIQUEIDENTIFIER NULL,
+    [UsuarioModifica]    UNIQUEIDENTIFIER NULL,
+    CONSTRAINT [PK_Productos] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [UQ_Productos_Codigo] UNIQUE ([CodigoProducto]),
+    CONSTRAINT [FK_Productos_Marcas] FOREIGN KEY ([IdMarca]) REFERENCES [dbo].[Marcas] ([Id]),
+    CONSTRAINT [FK_Productos_Categorias] FOREIGN KEY ([IdCategoria]) REFERENCES [dbo].[Categorias] ([Id]),
+    CONSTRAINT [CK_Productos_Precio] CHECK ([Precio] >= 0),
+    CONSTRAINT [CK_Productos_Stock] CHECK ([Stock] >= 0)
+);
