@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vkMGvMO03bg=",
+  "dgSpecHash": "3kXUm/4dkFw=",
   "success": true,
-  "projectFilePath": "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj",
+  "projectFilePath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Eduardo\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Eduardo\\.nuget\\packages\\closedxml\\0.104.2\\closedxml.0.104.2.nupkg.sha512",

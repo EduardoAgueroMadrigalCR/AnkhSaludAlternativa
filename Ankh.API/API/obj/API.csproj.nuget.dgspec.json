@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj": {}
+    "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj": {}
   },
   "projects": {
     "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\Abstracciones\\Abstracciones.csproj": {
@@ -78,14 +78,14 @@
         }
       }
     },
-    "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj": {
+    "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj",
+        "projectUniqueName": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj",
+        "projectPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\API.csproj",
         "packagesPath": "C:\\Users\\Eduardo\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\obj\\",
+        "outputPath": "C:\\Users\\Eduardo\\OneDrive\\Escritorio\\AnkhSaludAlternativa-ANKH-DemoVisual\\Ankh.API\\API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

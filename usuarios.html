@@ -22,7 +22,6 @@
         </nav>
       </header>
 
-      <!-- RF-05: crear usuario -->
       <section class="section-card card">
         <h2>Nuevo usuario</h2>
         <div class="form-grid">
@@ -39,7 +38,6 @@
         </div>
       </section>
 
-      <!-- RF-06 y RF-08: roles, desactivar y reactivar -->
       <section class="section-card card">
         <h2>Personal registrado</h2>
         <p id="mensajeLista" class="status hidden" style="margin-bottom:12px"></p>
@@ -98,7 +96,6 @@
         }
       }
 
-      // RF-05
       document.getElementById('crearUsuario').addEventListener('click', async () => {
         try {
           const r = await AnkhApi.post('/Usuario', {
@@ -116,7 +113,6 @@
         }
       });
 
-      // RF-06: cambiar rol
       cuerpoUsuarios.addEventListener('change', async (e) => {
         if (!e.target.classList.contains('cambiar-rol')) return;
         try {
@@ -128,7 +124,6 @@
         cargar();
       });
 
-      // RF-08: desactivar / reactivar con confirmacion
       cuerpoUsuarios.addEventListener('click', async (e) => {
         const boton = e.target.closest('button[data-accion]');
         if (!boton) return;
