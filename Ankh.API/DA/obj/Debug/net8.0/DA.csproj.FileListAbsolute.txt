@@ -13,3 +13,4 @@ C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.A
 C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\DA\obj\Debug\net8.0\refint\DA.dll
 C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\DA\obj\Debug\net8.0\DA.pdb
 C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\DA\obj\Debug\net8.0\ref\DA.dll
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\DA\obj\Debug\net8.0\DA.sourcelink.json

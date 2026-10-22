@@ -1,3 +1,4 @@
+
 USE MacrobioticaDB;
 GO
 IF OBJECT_ID('dbo.Marcas','U') IS NULL
@@ -51,7 +52,7 @@ END
 GO
 IF OBJECT_ID('dbo.ProductosHistorial','U') IS NULL
 BEGIN
--- RF-09: historial de modificaciones de cada producto
+
 CREATE TABLE [dbo].[ProductosHistorial] (
     [Id]            BIGINT IDENTITY(1,1) NOT NULL,
     [IdProducto]    UNIQUEIDENTIFIER     NOT NULL,
@@ -65,7 +66,7 @@ CREATE TABLE [dbo].[ProductosHistorial] (
 );
 END
 GO
--- Si Productos ya existía (versión anterior del script), agrega la columna de imagen
+
 IF COL_LENGTH('dbo.Productos', 'ImagenUrl') IS NULL
     ALTER TABLE [dbo].[Productos] ADD [ImagenUrl] VARCHAR(300) NULL;
 GO
@@ -87,7 +88,7 @@ END
 GO
 IF OBJECT_ID('dbo.ActualizarMarca') IS NOT NULL DROP PROCEDURE [dbo].[ActualizarMarca];
 GO
--- RF-10 escenario 3: el nombre se refleja en todos los productos asociados (son la misma fila por FK)
+
 CREATE PROCEDURE [dbo].[ActualizarMarca]
 @Id     UNIQUEIDENTIFIER,
 @Nombre VARCHAR(100)
@@ -104,7 +105,7 @@ END
 GO
 IF OBJECT_ID('dbo.ActualizarProducto') IS NOT NULL DROP PROCEDURE [dbo].[ActualizarProducto];
 GO
--- RF-09 escenario 2: guarda en ProductosHistorial cada campo que cambie
+
 CREATE PROCEDURE [dbo].[ActualizarProducto]
 @Id             UNIQUEIDENTIFIER,
 @Nombre         VARCHAR(150),
@@ -162,7 +163,7 @@ END
 GO
 IF OBJECT_ID('dbo.BuscarProductos') IS NOT NULL DROP PROCEDURE [dbo].[BuscarProductos];
 GO
--- RF-11: combina texto libre + marca + categoria; @SoloActivos=1 oculta descontinuados (catalogo publico)
+
 CREATE PROCEDURE [dbo].[BuscarProductos]
 @Texto       VARCHAR(150)     = NULL,
 @IdMarca     UNIQUEIDENTIFIER = NULL,
@@ -219,7 +220,7 @@ END
 GO
 IF OBJECT_ID('dbo.CrearProducto') IS NOT NULL DROP PROCEDURE [dbo].[CrearProducto];
 GO
--- RF-09
+
 CREATE PROCEDURE [dbo].[CrearProducto]
 @CodigoProducto VARCHAR(30),
 @Nombre         VARCHAR(150),
@@ -243,7 +244,7 @@ BEGIN
         THROW 50072, N'La marca no existe', 1;
     IF NOT EXISTS (SELECT 1 FROM [dbo].[Categorias] WHERE Id = @IdCategoria)
         THROW 50075, N'La categoría no existe', 1;
-    -- RF-09 escenario 3
+
     IF EXISTS (SELECT 1 FROM [dbo].[Productos] WHERE CodigoProducto = @CodigoProducto)
         THROW 50082, N'El código de producto ya existe', 1;
 
@@ -256,7 +257,7 @@ END
 GO
 IF OBJECT_ID('dbo.DescontinuarProducto') IS NOT NULL DROP PROCEDURE [dbo].[DescontinuarProducto];
 GO
--- RF-12: si tiene stock y no se forzo, @RequiereConfirmacion=1 y no cambia nada (la API pregunta al usuario)
+
 CREATE PROCEDURE [dbo].[DescontinuarProducto]
 @Id       UNIQUEIDENTIFIER,
 @IdUsuario UNIQUEIDENTIFIER,
@@ -283,7 +284,7 @@ END
 GO
 IF OBJECT_ID('dbo.EliminarCategoria') IS NOT NULL DROP PROCEDURE [dbo].[EliminarCategoria];
 GO
--- RF-10 escenario 2: no se elimina si tiene productos asociados
+
 CREATE PROCEDURE [dbo].[EliminarCategoria]
 @Id UNIQUEIDENTIFIER
 AS
@@ -373,7 +374,7 @@ END
 GO
 IF OBJECT_ID('dbo.ReactivarProducto') IS NOT NULL DROP PROCEDURE [dbo].[ReactivarProducto];
 GO
--- RF-12 escenario 3: conserva los atributos originales (nunca se borraron)
+
 CREATE PROCEDURE [dbo].[ReactivarProducto]
 @Id        UNIQUEIDENTIFIER,
 @IdUsuario UNIQUEIDENTIFIER
@@ -386,5 +387,31 @@ BEGIN
     UPDATE [dbo].[Productos]
     SET Descontinuado = 0, FechaDescontinuado = NULL, FechaModificacion = GETDATE(), UsuarioModifica = @IdUsuario
     WHERE Id = @Id;
+END
+GO
+IF OBJECT_ID('dbo.EliminarProducto') IS NOT NULL DROP PROCEDURE [dbo].[EliminarProducto];
+GO
+
+CREATE PROCEDURE [dbo].[EliminarProducto]
+@Id        UNIQUEIDENTIFIER,
+@IdUsuario UNIQUEIDENTIFIER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    DECLARE @Codigo VARCHAR(30), @Nombre VARCHAR(150);
+    SELECT @Codigo = CodigoProducto, @Nombre = Nombre FROM [dbo].[Productos] WHERE Id = @Id;
+
+    IF @Codigo IS NULL
+        THROW 50083, N'El producto no existe', 1;
+
+    BEGIN TRAN
+        DELETE FROM [dbo].[ProductosHistorial] WHERE IdProducto = @Id;
+        DELETE FROM [dbo].[Productos] WHERE Id = @Id;
+
+        INSERT INTO [dbo].[Bitacora] (IdUsuario, Accion, Detalle)
+        VALUES (@IdUsuario, 'ELIMINAR_PRODUCTO', LEFT(CONCAT(@Codigo, ' - ', @Nombre), 300));
+    COMMIT TRAN
 END
 GO

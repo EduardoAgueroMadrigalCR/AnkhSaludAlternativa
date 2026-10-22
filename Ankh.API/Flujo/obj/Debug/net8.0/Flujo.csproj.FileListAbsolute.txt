@@ -13,3 +13,4 @@ C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.A
 C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Flujo\obj\Debug\net8.0\refint\Flujo.dll
 C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Flujo\obj\Debug\net8.0\Flujo.pdb
 C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Flujo\obj\Debug\net8.0\ref\Flujo.dll
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Flujo\obj\Debug\net8.0\Flujo.sourcelink.json

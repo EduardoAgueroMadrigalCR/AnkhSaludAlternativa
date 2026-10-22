@@ -77,6 +77,15 @@ namespace API.Controllers
             return NoContent();
         }
 
+        // Eliminación definitiva: solo la Administradora
+        [Authorize(Roles = "Administrador")]
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> EliminarAsync([FromRoute] Guid id)
+        {
+            await _productoFlujo.EliminarAsync(id, User.ObtenerIdUsuario());
+            return NoContent();
+        }
+
         // RF-13
         [Authorize(Roles = "Administrador,Encargado de Inventario")]
         [HttpPost("Importar")]

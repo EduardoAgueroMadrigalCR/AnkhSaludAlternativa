@@ -9,7 +9,7 @@ namespace Flujo
 {
     public class ProductoFlujo : IProductoFlujo
     {
-
+        // RF-13: columnas obligatorias en el Excel (no distingue mayúsculas/minúsculas)
         private static readonly string[] ColumnasRequeridas =
             { "CodigoProducto", "Nombre", "Marca", "Categoria", "Precio", "Stock" };
 
@@ -46,6 +46,8 @@ namespace Flujo
 
         public async Task ReactivarAsync(Guid id, Guid idUsuario) => await _productoDA.ReactivarAsync(id, idUsuario);
 
+        public async Task EliminarAsync(Guid id, Guid idUsuario) => await _productoDA.EliminarAsync(id, idUsuario);
+
         private static ProductoCrear Normalizar(ProductoCrear p)
         {
             p.CodigoProducto = p.CodigoProducto.Trim();
@@ -55,6 +57,7 @@ namespace Flujo
             return p;
         }
 
+        // ---------------- RF-13: importación desde Excel ----------------
         public async Task<ImportacionResultado> ImportarAsync(IFormFile archivo, Guid idUsuario)
         {
             if (archivo == null || archivo.Length == 0)
@@ -95,6 +98,7 @@ namespace Flujo
                 if (!string.IsNullOrEmpty(titulo)) columnas[titulo] = celda.Address.ColumnNumber;
             }
 
+            // RF-13 escenario 2: el archivo no cumple el formato esperado -> se rechaza completo
             var faltantes = ColumnasRequeridas.Where(c => !columnas.ContainsKey(c)).ToList();
             if (faltantes.Count > 0)
                 throw new ReglaNegocioException(400,
@@ -109,6 +113,7 @@ namespace Flujo
             var resultado = new ImportacionResultado();
             var ultimaFila = hoja.LastRowUsed()?.RowNumber() ?? 1;
 
+            // RF-13 escenario 3: las filas con datos incompletos o inválidos se omiten (no detienen la importación)
             for (int numeroFila = 2; numeroFila <= ultimaFila; numeroFila++)
             {
                 var fila = hoja.Row(numeroFila);
@@ -172,7 +177,7 @@ namespace Flujo
                 }
                 catch (System.Data.SqlClient.SqlException ex) when (ex.Number >= 50000 && ex.Number < 51000)
                 {
-
+                    // Reglas de los procedimientos almacenados (ej. "El código de producto ya existe")
                     resultado.Omitidos.Add(Omitido(numeroFila, ex.Message));
                 }
             }

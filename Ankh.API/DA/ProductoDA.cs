@@ -53,5 +53,8 @@ namespace DA
 
         public async Task ReactivarAsync(Guid id, Guid idUsuario)
             => await _sqlConnection.ExecuteAsync("[ReactivarProducto]", new { Id = id, IdUsuario = idUsuario }, commandType: SP);
+
+        public async Task EliminarAsync(Guid id, Guid idUsuario)
+            => await _sqlConnection.ExecuteAsync("[EliminarProducto]", new { Id = id, IdUsuario = idUsuario }, commandType: SP);
     }
 }

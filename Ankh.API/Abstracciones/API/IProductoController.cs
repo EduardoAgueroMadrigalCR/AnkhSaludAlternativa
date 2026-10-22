@@ -14,6 +14,7 @@ namespace Abstracciones.API
         Task<IActionResult> ObtenerHistorialAsync([FromRoute] Guid id);
         Task<IActionResult> DescontinuarAsync([FromRoute] Guid id, [FromQuery] bool forzar);
         Task<IActionResult> ReactivarAsync([FromRoute] Guid id);
+        Task<IActionResult> EliminarAsync([FromRoute] Guid id);
         Task<IActionResult> ImportarAsync(IFormFile archivo);
     }
 }

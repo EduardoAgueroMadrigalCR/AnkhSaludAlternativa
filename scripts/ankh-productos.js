@@ -59,6 +59,7 @@ const AnkhProductos = (() => {
 
     descontinuar: (id, forzar = false) => put(`/Producto/${id}/Descontinuar?forzar=${forzar}`),
     reactivar: (id) => put(`/Producto/${id}/Reactivar`),
+    eliminar: (id) => eliminarConMetodo('/Producto/' + id, 'DELETE'),
 
     async importar(archivo) {
       const actual = AnkhApi.sesion();

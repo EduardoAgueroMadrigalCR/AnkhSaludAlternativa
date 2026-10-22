@@ -15,12 +15,10 @@
         </div>
         <nav class="site-nav">
           <a href="index.html">Inicio</a>
-
           <a href="perfil.html">Perfil</a>
         </nav>
       </header>
 
-    
       <section class="section-card card">
         <h2>Marcas y categorías</h2>
         <div class="row-2" style="align-items:start; gap:32px">
@@ -43,7 +41,6 @@
         </div>
         <p id="mensajeCatalogoBase" class="status hidden" style="margin-top:12px"></p>
       </section>
-
 
       <section class="section-card card">
         <h2 id="tituloFormulario">Nuevo producto</h2>
@@ -70,7 +67,6 @@
         </div>
       </section>
 
-
       <section class="section-card card">
         <h2>Importar productos desde Excel</h2>
         <p class="status" style="margin-bottom:12px">
@@ -84,7 +80,6 @@
         <div id="resultadoImportacion" class="hidden" style="margin-top:14px"></div>
       </section>
 
-     
       <section class="section-card card">
         <h2>Productos registrados</h2>
         <p id="mensajeLista" class="status hidden" style="margin-bottom:12px"></p>
@@ -98,7 +93,6 @@
         </div>
       </section>
 
-   
       <section class="section-card card hidden" id="seccionHistorial">
         <h2>Historial de cambios</h2>
         <div id="cuerpoHistorial"></div>
@@ -144,7 +138,7 @@
         return lista.map(x => `<option value="${x.id}">${AnkhApi.esc(x.nombre)}</option>`).join('');
       }
 
-  
+      // ---------- RF-10 ----------
       async function cargarMarcasCategorias() {
         [marcas, categorias] = await Promise.all([AnkhProductos.listarMarcas(), AnkhProductos.listarCategorias()]);
         listaMarcas.innerHTML = marcas.map(m => `
@@ -193,6 +187,7 @@
         cargarMarcasCategorias();
       }));
 
+      // ---------- RF-09 ----------
       function limpiarFormulario() {
         editandoId = null;
         tituloFormulario.textContent = 'Nuevo producto';
@@ -243,7 +238,11 @@
         return new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC' }).format(valor);
       }
 
+      let productosListados = [];
+      const puedeEliminar = !!yo && yo.rol === 'Administrador';
+
       function pintarProductos(productos) {
+        productosListados = productos;
         cuerpoProductos.innerHTML = productos.map(p => `
           <tr>
             <td>${AnkhApi.esc(p.codigoProducto)}</td>
@@ -259,6 +258,7 @@
               ${p.descontinuado
                 ? `<button class="button-primary boton-chico" data-accion="reactivar" data-id="${p.id}">Reactivar</button>`
                 : `<button class="button-secondary boton-chico" data-accion="descontinuar" data-id="${p.id}">Descontinuar</button>`}
+              ${puedeEliminar ? `<button class="button-secondary boton-chico boton-peligro" data-accion="eliminar" data-id="${p.id}">Eliminar</button>` : ''}
             </td>
           </tr>`).join('');
       }
@@ -307,7 +307,7 @@
         if (accion === 'descontinuar') {
           try {
             const r = await AnkhProductos.descontinuar(id, false);
-
+            // RF-12 escenario 2: si tiene stock, se pide confirmación antes de proceder
             if (r.requiereConfirmacion) {
               if (confirm(`Este producto todavía tiene ${r.stockActual} unidades en stock. ¿Descontinuarlo de todas formas?`)) {
                 await AnkhProductos.descontinuar(id, true);
@@ -316,6 +316,19 @@
               }
             }
             AnkhApi.mostrar(mensajeLista, 'Producto descontinuado. Ya no aparece en el catálogo público.');
+          } catch (error) { AnkhApi.mostrar(mensajeLista, error.message, true); }
+          cargarProductos();
+        }
+
+        if (accion === 'eliminar') {
+          const p = productosListados.find(x => x.id === id);
+          const nombre = p ? p.nombre : 'este producto';
+          if (!confirm(`¿Eliminar definitivamente "${nombre}"?\n\nSe borrará también su historial y no se puede deshacer.\nSi solo quiere ocultarlo del catálogo, use "Descontinuar".`)) return;
+          try {
+            await AnkhProductos.eliminar(id);
+            if (editandoId === id) limpiarFormulario();
+            seccionHistorial.classList.add('hidden');
+            AnkhApi.mostrar(mensajeLista, 'Producto eliminado.');
           } catch (error) { AnkhApi.mostrar(mensajeLista, error.message, true); }
           cargarProductos();
         }
@@ -330,6 +343,7 @@
       });
 
       document.getElementById('cerrarHistorial').addEventListener('click', () => seccionHistorial.classList.add('hidden'));
+
 
       document.getElementById('importarArchivo').addEventListener('click', async () => {
         const input = document.getElementById('archivoImportar');

@@ -10,3 +10,4 @@ C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.A
 C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Abstracciones\obj\Debug\net8.0\refint\Abstracciones.dll
 C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Abstracciones\obj\Debug\net8.0\Abstracciones.pdb
 C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Abstracciones\obj\Debug\net8.0\ref\Abstracciones.dll
+C:\Users\Eduardo\OneDrive\Escritorio\AnkhSaludAlternativa-ANKH-DemoVisual\Ankh.API\Abstracciones\obj\Debug\net8.0\Abstracciones.sourcelink.json

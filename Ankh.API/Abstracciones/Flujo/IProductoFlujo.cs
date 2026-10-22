@@ -13,6 +13,7 @@ namespace Abstracciones.Flujo
         Task<IEnumerable<ProductoHistorialItem>> ObtenerHistorialAsync(Guid idProducto);
         Task<DescontinuarResultado> DescontinuarAsync(Guid id, Guid idUsuario, bool forzar);
         Task ReactivarAsync(Guid id, Guid idUsuario);
+        Task EliminarAsync(Guid id, Guid idUsuario);
 
         // RF-13
         Task<ImportacionResultado> ImportarAsync(IFormFile archivo, Guid idUsuario);
