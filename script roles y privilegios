@@ -1,0 +1,221 @@
+/* =====================================================================
+   ANKH - Roles y privilegios (Administrador, Vendedor, Encargado de
+   Inventario y Usuario)
+   ===================================================================== */
+USE MacrobioticaDB;
+GO
+
+PRINT '=== ESTADO ANTES ===';
+SELECT 'ANTES - Roles' AS Evidencia, Id, Nombre, Descripcion FROM [dbo].[Roles] ORDER BY Id;
+SELECT 'ANTES - Modulos por rol' AS Evidencia, r.Id AS IdRol, r.Nombre AS Rol, m.Nombre AS Modulo
+FROM [dbo].[Roles] r
+LEFT JOIN [dbo].[RolesxModulo] rm ON rm.IdRol = r.Id
+LEFT JOIN [dbo].[Modulos] m ON m.Id = rm.IdModulo
+ORDER BY r.Id, m.Nombre;
+GO
+
+-- ---------------------------------------------------------------------
+-- 1. Tablas nuevas
+-- ---------------------------------------------------------------------
+IF OBJECT_ID('dbo.Permisos', 'U') IS NULL
+BEGIN
+-- Catalogo de privilegios (acciones) del sistema. Cada permiso pertenece a un modulo
+-- y referencia la historia de usuario que lo origina (AN02_Historias_de_Usuario).
+CREATE TABLE [dbo].[Permisos] (
+    [Id]          INT IDENTITY(1,1) NOT NULL,
+    [Codigo]      VARCHAR(60)       NOT NULL,
+    [Descripcion] VARCHAR(200)      NOT NULL,
+    [IdModulo]    INT               NOT NULL,
+    [Historia]    VARCHAR(20)       NULL,
+    CONSTRAINT [PK_Permisos] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [UQ_Permisos_Codigo] UNIQUE ([Codigo]),
+    CONSTRAINT [FK_Permisos_Modulos] FOREIGN KEY ([IdModulo]) REFERENCES [dbo].[Modulos] ([Id])
+);
+END
+GO
+
+IF OBJECT_ID('dbo.RolesxPermiso', 'U') IS NULL
+BEGIN
+-- Privilegios concedidos a cada rol (relacion N:M entre Roles y Permisos).
+CREATE TABLE [dbo].[RolesxPermiso] (
+    [IdRol]     INT NOT NULL,
+    [IdPermiso] INT NOT NULL,
+    CONSTRAINT [PK_RolesxPermiso] PRIMARY KEY CLUSTERED ([IdRol] ASC, [IdPermiso] ASC),
+    CONSTRAINT [FK_RolesxPermiso_Roles]    FOREIGN KEY ([IdRol])     REFERENCES [dbo].[Roles] ([Id]),
+    CONSTRAINT [FK_RolesxPermiso_Permisos] FOREIGN KEY ([IdPermiso]) REFERENCES [dbo].[Permisos] ([Id])
+);
+END
+GO
+
+-- ---------------------------------------------------------------------
+-- 2. Datos: roles, modulos, permisos y privilegios por rol (una transaccion)
+-- ---------------------------------------------------------------------
+SET XACT_ABORT ON;
+BEGIN TRY
+    BEGIN TRAN;
+
+    -- Roles. Administrador (Id 1) no se toca.
+    UPDATE [dbo].[Roles] SET Descripcion = 'Consulta productos, factura ventas y aplica descuentos autorizados' WHERE Id = 2 AND Nombre = 'Vendedor';
+    UPDATE [dbo].[Roles] SET Descripcion = 'Gestiona productos, inventario y consulta proveedores' WHERE Id = 3 AND Nombre = 'Encargado de Inventario';
+
+    IF NOT EXISTS (SELECT 1 FROM [dbo].[Roles] WHERE Nombre = 'Usuario')
+        INSERT INTO [dbo].[Roles] (Id, Nombre, Descripcion) VALUES (4, 'Usuario', 'Acceso basico: consulta el catalogo y administra su propio perfil');
+
+    -- Modulos
+    INSERT INTO [dbo].[Modulos] (Nombre)
+    SELECT 'Proveedores' WHERE NOT EXISTS (SELECT 1 FROM [dbo].[Modulos] WHERE Nombre = 'Proveedores');
+
+    -- Catalogo de permisos
+    INSERT INTO [dbo].[Permisos] (Codigo, Descripcion, IdModulo, Historia)
+    SELECT v.Codigo, v.Descripcion, m.Id, v.Historia
+    FROM (VALUES
+  ('usuario.crear', 'Crear cuentas de usuario con rol y credenciales', 'Usuarios', 'RF-05'),
+  ('usuario.listar', 'Consultar usuarios y roles disponibles', 'Usuarios', 'RF-06'),
+  ('usuario.cambiar_rol', 'Asignar o cambiar el rol de un usuario', 'Usuarios', 'RF-06'),
+  ('usuario.desactivar', 'Desactivar y reactivar cuentas de personal', 'Usuarios', 'RF-08'),
+  ('producto.consultar', 'Buscar y filtrar productos del catalogo', 'Productos', 'RF-11'),
+  ('producto.listar_admin', 'Ver el listado administrativo (incluye descontinuados)', 'Productos', 'RF-09'),
+  ('producto.crear', 'Registrar productos', 'Productos', 'RF-09'),
+  ('producto.editar', 'Editar productos existentes', 'Productos', 'RF-09'),
+  ('producto.historial', 'Consultar el historial de modificaciones de un producto', 'Productos', 'RF-09'),
+  ('producto.descontinuar', 'Descontinuar y reactivar productos', 'Productos', 'RF-12'),
+  ('producto.importar', 'Importar productos desde Excel', 'Productos', 'RF-13'),
+  ('marca.gestionar', 'Crear, editar y eliminar marcas', 'Productos', 'RF-10'),
+  ('categoria.gestionar', 'Crear, editar y eliminar categorias', 'Productos', 'RF-10'),
+  ('inventario.ingreso_registrar', 'Registrar ingreso de mercaderia con proveedor y precio', 'Inventario', 'RF-14'),
+  ('inventario.ingreso_anular', 'Anular un comprobante de entrada (dentro de 24 horas)', 'Inventario', 'RF-15'),
+  ('inventario.entradas_consultar', 'Consultar el historial de entradas de mercaderia', 'Inventario', 'RF-15'),
+  ('inventario.ajustar', 'Incrementar stock por ajuste interno con justificacion', 'Inventario', 'RF-16'),
+  ('inventario.aprobar_ajuste', 'Aprobar ajustes que superan el limite permitido', 'Inventario', 'RF-16'),
+  ('inventario.conteo_fisico', 'Registrar ajustes por conteo fisico', 'Inventario', 'RF-20'),
+  ('inventario.alertas', 'Ver alertas de stock minimo y stock en cero', 'Inventario', 'RF-18'),
+  ('inventario.limite_minimo', 'Configurar el limite minimo de stock por producto', 'Inventario', 'RF-18'),
+  ('proveedor.gestionar', 'Crear y editar la ficha de proveedores', 'Proveedores', 'RF-21'),
+  ('proveedor.consultar', 'Filtrar proveedores por marca y ver su historial', 'Proveedores', 'RF-22'),
+  ('venta.facturar', 'Generar factura al confirmar una venta', 'Ventas', 'RF-24'),
+  ('venta.reimprimir', 'Reimprimir una factura marcada como Copia', 'Ventas', 'RF-24'),
+  ('venta.descuento', 'Aplicar descuentos dentro del limite autorizado', 'Ventas', 'RF-26'),
+  ('venta.descuento_sin_limite', 'Autorizar descuentos por encima del limite del vendedor', 'Ventas', 'RF-26'),
+  ('venta.anular', 'Anular una factura emitida por error (dentro de 24 horas)', 'Ventas', 'RF-25'),
+  ('reporte.ventas', 'Ver el dashboard de ventas', 'Reportes', 'RF-27'),
+  ('reporte.inventario', 'Consultar y exportar movimientos de inventario', 'Reportes', 'RF-28')
+    ) v (Codigo, Descripcion, Modulo, Historia)
+    INNER JOIN [dbo].[Modulos] m ON m.Nombre = v.Modulo
+    WHERE NOT EXISTS (SELECT 1 FROM [dbo].[Permisos] x WHERE x.Codigo = v.Codigo);
+
+    -- Administrador (1): todos los permisos
+    INSERT INTO [dbo].[RolesxPermiso] (IdRol, IdPermiso)
+    SELECT 1, p.Id FROM [dbo].[Permisos] p
+    WHERE NOT EXISTS (SELECT 1 FROM [dbo].[RolesxPermiso] x WHERE x.IdRol = 1 AND x.IdPermiso = p.Id);
+
+    -- Vendedor (2), Encargado de Inventario (3) y Usuario (4)
+    INSERT INTO [dbo].[RolesxPermiso] (IdRol, IdPermiso)
+    SELECT v.IdRol, p.Id
+    FROM (VALUES
+  (2, 'producto.consultar'),
+  (2, 'venta.facturar'),
+  (2, 'venta.reimprimir'),
+  (2, 'venta.descuento'),
+  (3, 'producto.consultar'),
+  (3, 'producto.listar_admin'),
+  (3, 'producto.crear'),
+  (3, 'producto.editar'),
+  (3, 'producto.historial'),
+  (3, 'marca.gestionar'),
+  (3, 'categoria.gestionar'),
+  (3, 'inventario.entradas_consultar'),
+  (3, 'inventario.ajustar'),
+  (3, 'inventario.conteo_fisico'),
+  (3, 'inventario.alertas'),
+  (3, 'proveedor.consultar'),
+  (4, 'producto.consultar')
+    ) v (IdRol, Codigo)
+    INNER JOIN [dbo].[Permisos] p ON p.Codigo = v.Codigo
+    WHERE NOT EXISTS (SELECT 1 FROM [dbo].[RolesxPermiso] x WHERE x.IdRol = v.IdRol AND x.IdPermiso = p.Id);
+
+    -- Modulos por rol: se derivan de los permisos (reemplaza la asignacion anterior)
+    DELETE FROM [dbo].[RolesxModulo];
+    INSERT INTO [dbo].[RolesxModulo] (IdRol, IdModulo)
+    SELECT DISTINCT rp.IdRol, p.IdModulo
+    FROM [dbo].[RolesxPermiso] rp
+    INNER JOIN [dbo].[Permisos] p ON p.Id = rp.IdPermiso;
+
+    INSERT INTO [dbo].[Bitacora] (IdUsuario, Accion, Detalle)
+    VALUES (NULL, 'MIGRACION_ROLES', 'Rol Usuario, modulo Proveedores y privilegios por rol');
+
+    COMMIT TRAN;
+    PRINT 'Datos de roles y privilegios aplicados.';
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRAN;
+    THROW;
+END CATCH
+GO
+
+-- ---------------------------------------------------------------------
+-- 3. Procedimientos almacenados nuevos
+-- ---------------------------------------------------------------------
+IF OBJECT_ID('dbo.ObtenerPermisosxUsuario') IS NOT NULL DROP PROCEDURE [dbo].[ObtenerPermisosxUsuario];
+GO
+-- RF-06: codigos de permiso del rol del usuario (la interfaz muestra u oculta opciones con esto)
+CREATE PROCEDURE [dbo].[ObtenerPermisosxUsuario]
+@IdUsuario UNIQUEIDENTIFIER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT p.Codigo
+    FROM [dbo].[Usuarios] u
+    INNER JOIN [dbo].[RolesxPermiso] rp ON rp.IdRol = u.IdRol
+    INNER JOIN [dbo].[Permisos] p ON p.Id = rp.IdPermiso
+    WHERE u.Id = @IdUsuario AND u.Activo = 1
+    ORDER BY p.Codigo;
+END
+GO
+
+IF OBJECT_ID('dbo.VerificarPermiso') IS NOT NULL DROP PROCEDURE [dbo].[VerificarPermiso];
+GO
+-- RF-06: 1 si el rol del usuario (activo) tiene el permiso. Se lee en cada peticion,
+-- por eso un cambio de rol o de privilegios se aplica de inmediato.
+CREATE PROCEDURE [dbo].[VerificarPermiso]
+@IdUsuario UNIQUEIDENTIFIER,
+@Permiso   VARCHAR(60)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT CAST(CASE WHEN EXISTS (
+        SELECT 1
+        FROM [dbo].[Usuarios] u
+        INNER JOIN [dbo].[RolesxPermiso] rp ON rp.IdRol = u.IdRol
+        INNER JOIN [dbo].[Permisos] p ON p.Id = rp.IdPermiso
+        WHERE u.Id = @IdUsuario AND u.Activo = 1 AND p.Codigo = @Permiso)
+        THEN 1 ELSE 0 END AS BIT) AS TienePermiso;
+END
+GO
+
+-- ---------------------------------------------------------------------
+-- 4. ESTADO DESPUES (evidencia)
+-- ---------------------------------------------------------------------
+PRINT '=== ESTADO DESPUES ===';
+
+SELECT 'DESPUES - Roles' AS Evidencia, Id, Nombre, Descripcion FROM [dbo].[Roles] ORDER BY Id;
+
+SELECT 'DESPUES - Modulos por rol' AS Evidencia, r.Id AS IdRol, r.Nombre AS Rol, m.Nombre AS Modulo
+FROM [dbo].[Roles] r
+LEFT JOIN [dbo].[RolesxModulo] rm ON rm.IdRol = r.Id
+LEFT JOIN [dbo].[Modulos] m ON m.Id = rm.IdModulo
+ORDER BY r.Id, m.Nombre;
+
+SELECT 'DESPUES - Cantidad de privilegios por rol' AS Evidencia, r.Id AS IdRol, r.Nombre AS Rol, COUNT(rp.IdPermiso) AS Privilegios
+FROM [dbo].[Roles] r
+LEFT JOIN [dbo].[RolesxPermiso] rp ON rp.IdRol = r.Id
+GROUP BY r.Id, r.Nombre
+ORDER BY r.Id;
+
+SELECT 'DESPUES - Privilegios por rol (detalle)' AS Evidencia, r.Nombre AS Rol, m.Nombre AS Modulo, p.Codigo AS Permiso, p.Historia
+FROM [dbo].[RolesxPermiso] rp
+INNER JOIN [dbo].[Roles] r ON r.Id = rp.IdRol
+INNER JOIN [dbo].[Permisos] p ON p.Id = rp.IdPermiso
+INNER JOIN [dbo].[Modulos] m ON m.Id = p.IdModulo
+WHERE r.Id IN (2, 3, 4)
+ORDER BY r.Id, m.Nombre, p.Codigo;
+GO
